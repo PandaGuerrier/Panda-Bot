@@ -23,7 +23,7 @@ function registerAllDB() {
 			]
 		}
 	]
-	const rowtruc = db.get(`SELECT * FROM GiveAway`)
+	const rowtruc = db.each(`SELECT * FROM GiveAway`)
 	if (!rowtruc) db.each(`CREATE TABLE IF NOT EXISTS 'GiveAway' ('id' VARCHAR, 'channelId' VARCHAR, 'lot' VARCHAR, 'gagnants' INT, idMsg VARCHAR)`)
 
 	db.each(`SELECT * FROM bots`, (err, row) => {

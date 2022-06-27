@@ -1,0 +1,14 @@
+const {
+    SlashCommandBuilder
+} = require('@discordjs/builders')
+
+module.exports = {
+    data: new SlashCommandBuilder()
+        .setName('ping')
+        .setDescription('ping'),
+    role: [],
+
+    execute(client, interaction) {
+
+    },
+}

@@ -17,7 +17,7 @@ module.exports = {
     if (interaction.member.user.id == mem) return interaction.reply({ content: `Tu ne peux pas te ban toi m\u00eame !`, ephemeral: true })
 
     const emb = new Discord.MessageEmbed()
-      .setTitle("Vous avez \u00e9t\u00e9 banni de " + config.informations.nom + " !")
+      .setTitle("Vous avez \u00e9t\u00e9 banni de " + config.informations.serverName + " !")
       .addFields(
         { name: "Banni par : ", value: interaction.member.user.username, inline: true },
         { name: "Raison :", value: String(EmbedDescription).substr(0, 2048).split("+n+").join("\n"), inline: true }

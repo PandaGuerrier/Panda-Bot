@@ -25,7 +25,7 @@ module.exports = {
     if (member.permissions.has("ADMINISTRATOR")) return interaction.reply({ content: "Je ne peux pas mute cette personne :/ !", ephemeral: true })
 
     const embedSendMuted = new Discord.MessageEmbed()
-      .setDescription("Vous avez \u00e9t\u00e9 mute de " + config.informations.nom + " !")
+      .setDescription("Vous avez \u00e9t\u00e9 mute de " + config.informations.serverName + " !")
       .addFields(
         { name: "Mute par : ", value: interaction.member.user.username, inline: true },
         { name: "Raison :", value: String(reason), inline: true }

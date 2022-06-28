@@ -7,7 +7,6 @@ module.exports = {
 
     console.log("Connect\u00e9 ❤️")
     registerAllDB()
-    getDB().run("INSERT INTO `users` (`id`, `code`, `inviterName`, `inviterId`) VALUES (1, 'Bot', '0000', 'bite')")
     client.guilds.cache.forEach(guild => {
       guild.invites.fetch()
         .then(invites => {

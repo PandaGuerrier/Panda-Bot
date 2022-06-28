@@ -33,7 +33,7 @@ module.exports = {
               .setTitle("Classement des invitations !")
               .setDescription("Voici le classement :\n \n" + (row.map((e, i) => {
                 return `${i + 1}. **${e.pseudo}** avec ${e.numero} invitations, (${e.normal} normale(s), ${e.partie} partie(s), ${e.bonus} bonus)`
-              })).slice(0, 10).join('\n') + `\n\n${row.length > 10 ? `Et ${row.length - 10} autres participants !` : `Bon jeux sur ${config.informations.nom} !`}`)
+              })).slice(0, 10).join('\n') + `\n\n${row.length > 10 ? `Et ${row.length - 10} autres participants !` : `Bon jeux sur ${config.informations.serverName} !`}`)
               .setColor(config.embedColor)
 
             msg.edit({

@@ -17,7 +17,7 @@ module.exports = {
 
       const embed = new Discord.MessageEmbed()
         .setTitle("Classement des invitations !")
-        .setDescription("Voici le classement :\n \n" + (row.map((e, i) => { return `${i + 1}. **${e.pseudo}** avec ${e.numero} invitations, (${e.normal} normale(s), ${e.partie} partie(s), ${e.bonus} bonus)` })).slice(0, 10).join('\n') + `\n\nBon jeux sur ${config.informations.nom} !`)
+        .setDescription("Voici le classement :\n \n" + (row.map((e, i) => { return `${i + 1}. **${e.pseudo}** avec ${e.numero} invitations, (${e.normal} normale(s), ${e.partie} partie(s), ${e.bonus} bonus)` })).slice(0, 10).join('\n') + `\n\nBon jeux sur ${config.informations.serverName} !`)
         .setColor(config.embedColor)
 
       let btn2
@@ -92,7 +92,7 @@ module.exports = {
 
           const embedPrecedent = new Discord.MessageEmbed()
             .setTitle("Classement des invitations !")
-            .setDescription("Voici le classement :\n \n" + (row.map((e, i) => { return `${i + 1}. **${e.pseudo}** avec ${e.numero} invitations, (${e.normal} normale(s), ${e.partie} partie(s), ${e.bonus} bonus)` })).slice(boutonSansString * 10 - 10, boutonSansString * 10).join('\n') + `\n\nBon jeux sur ${config.informations.nom} !`)
+            .setDescription("Voici le classement :\n \n" + (row.map((e, i) => { return `${i + 1}. **${e.pseudo}** avec ${e.numero} invitations, (${e.normal} normale(s), ${e.partie} partie(s), ${e.bonus} bonus)` })).slice(boutonSansString * 10 - 10, boutonSansString * 10).join('\n') + `\n\nBon jeux sur ${config.informations.serverName} !`)
             .setColor(config.embedColor)
 
           let boutons
@@ -156,7 +156,7 @@ module.exports = {
 
           const embedSuivant = new Discord.MessageEmbed()
             .setTitle("Classement des invitations !")
-            .setDescription("Voici le classement :\n \n" + (row.map((e, i) => { return `${i + 1}. **${e.pseudo}** avec ${e.numero} invitations, (${e.normal} normale(s), ${e.partie} partie(s), ${e.bonus} bonus)` })).slice(boutonSansString * 10 - 10, boutonSansString * 10).join('\n') + `\n\nBon jeux sur ${config.informations.nom} !`)
+            .setDescription("Voici le classement :\n \n" + (row.map((e, i) => { return `${i + 1}. **${e.pseudo}** avec ${e.numero} invitations, (${e.normal} normale(s), ${e.partie} partie(s), ${e.bonus} bonus)` })).slice(boutonSansString * 10 - 10, boutonSansString * 10).join('\n') + `\n\nBon jeux sur ${config.informations.serverName} !`)
             .setColor(config.embedColor)
 
           /** 
@@ -220,7 +220,7 @@ module.exports = {
 
           const embed = new Discord.MessageEmbed()
             .setTitle("Classement des invitations !")
-            .setDescription("Voici le classement :\n \n" + (row.map((e, i) => { return `${i + 1}. **${e.pseudo}** avec ${e.numero} invitations, (${e.normal} normale(s), ${e.partie} partie(s), ${e.bonus} bonus)` })).slice(0, 10).join('\n') + `\n\nBon jeux sur ${config.informations.nom} !`)
+            .setDescription("Voici le classement :\n \n" + (row.map((e, i) => { return `${i + 1}. **${e.pseudo}** avec ${e.numero} invitations, (${e.normal} normale(s), ${e.partie} partie(s), ${e.bonus} bonus)` })).slice(0, 10).join('\n') + `\n\nBon jeux sur ${config.informations.serverName} !`)
             .setColor(config.embedColor)
 
 

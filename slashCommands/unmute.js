@@ -15,7 +15,7 @@ module.exports = {
     if (interaction.member.user.id == mem.user.id) return interaction.reply({ content: `Tu ne peux pas te unmute toi m\u00eame !`, ephemeral: true })
 
     const emb = new Discord.MessageEmbed()
-      .setTitle("Vous avez \u00e9t\u00e9 unmute de " + config.informations.nom + " !")
+      .setTitle("Vous avez \u00e9t\u00e9 unmute de " + config.informations.serverName + " !")
       .setDescription("Veuillez à ne pas recommencer la prochaine fois ) !")
       .setColor(config.embedColor)
 

@@ -7,16 +7,19 @@ module.exports = {
 
         if (!interaction.isSelectMenu()) return;
         if (interaction.customId === 'ticket') {
-            let optionsConfig
-            for(let ticketConfig = 0; ticketConfig < config.tickets.categories.length; ticketConfig++) {
-                if(interaction.values[0] === config.tickets.categories[ticketConfig].name) {
-                    optionsConfig = config.tickets.categories[ticketConfig]
-                } else {
-                    continue
-                }
-            }
+
             if (config.tickets.categories.some(r => r.name === interaction.values[0])) {
-                console.log(optionsConfig)
+                
+                let optionsConfig
+                for(let ticketConfig = 0; ticketConfig < config.tickets.categories.length; ticketConfig++) {
+                    if(interaction.values[0] === config.tickets.categories[ticketConfig].name) {
+                        optionsConfig = config.tickets.categories[ticketConfig]
+                    } else {
+                        continue
+                    }
+                }
+
+                await interaction.message.edit()
 
                 const em = new Discord.MessageEmbed()
                     .setTitle("Erreur")
@@ -35,7 +38,7 @@ module.exports = {
 
                 interaction.channel.guild.channels.create(optionsConfig.emoji + '・' + interaction.member.user.username, {
                     type: 'GUILD_TEXT',
-                    parent: optionsConfig.categorie,
+                    parent: optionsConfig.categorieId,
                     permissionOverwrites: [
                         {
                             id: interaction.message.guild.id,

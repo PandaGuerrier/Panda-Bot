@@ -1,0 +1,62 @@
+const { SlashCommandBuilder } = require('@discordjs/builders')
+const config = require("../config/config.json")
+const Discord = require("discord.js")
+const ms = require("ms")
+
+module.exports = {
+	data: new SlashCommandBuilder()
+		.setName('tempsmute')
+		.setDescription('Mute une personne temporairement !')
+    .addUserOption(option => option.setName('ping').setDescription('Le membre a mute').setRequired(true))
+    .addStringOption(option => option.setName('raison').setDescription('La raison du mute').setRequired(true))
+		.addIntegerOption(option => option.setName('jours').setDescription('Le nombre de jours a mute').setRequired(true))
+		.addIntegerOption(option => option.setName('heures').setDescription("Le nombre d'heures a mute").setRequired(true))
+		.addIntegerOption(option => option.setName('minutes').setDescription('Le nombre de minutes a mute').setRequired(true)),
+    role: ["959209557719126087", "959209559803711498", "959209560718065704", "959209561678569503"],
+
+
+	async execute(client, interaction) {
+    const member = interaction.options.getMember("ping")
+    const reason = interaction.options.getString("raison")
+    const d = interaction.options.getInteger("jours")
+    const h = interaction.options.getInteger("heures")
+    const m = interaction.options.getInteger("minutes")
+
+    if (interaction.member.user.id == member.user.id) return interaction.reply({ content: `Tu ne peux pas te mute toi m\u00eame !`, ephemeral: true })
+
+    if (member.permissions.has("ADMINISTRATOR")) return interaction.reply({ content: "Je ne peux pas mute cette personne :/ !", ephemeral: true })
+
+    const embedSendMuted = new Discord.MessageEmbed()
+      .setDescription("Vous avez \u00e9t\u00e9 mute de " + config.informations.nom + " !")
+      .addFields(
+        { name: "Mute par : ", value: interaction.member.user.username, inline: true },
+        { name: "Raison :", value: String(reason), inline: true }
+      ).setColor(config.embedColor)
+
+
+    const embedSenStaff = new Discord.MessageEmbed()
+      .setDescription(`Vous avez bien mute : ${member}`)
+      .addFields(
+        { name: "Sera unmute dans :", value: "<t:" + tempsRestant() + ":R>" },
+        { name: "Raison :", value: String(reason) }
+      ).setColor(config.embedColor)
+
+    member.send({ embeds: [embedSendMuted] }).catch()
+    interaction.reply({ embeds: [embedSenStaff], ephemeral: true })
+
+    const log = new Discord.MessageEmbed()
+      .setDescription(interaction.member.user.tag + " a mute " + member.user.tag + " pour la raison : " + String(reason)).setColor(config.embedColor)
+
+    interaction.guild.channels.cache.get(config.channels.log).send({ embeds: [log] })
+
+    member.timeout(ms(d + "d") + ms(h + "h") + ms(m + "m"), reason)
+
+    function tempsRestant() {
+      day = d * 86400
+      heure = h * 600
+      minutes = m * 60
+
+      return Math.round(+new Date() / 1000) + day + heure + minutes
+    }
+  }
+}

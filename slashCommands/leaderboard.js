@@ -1,0 +1,284 @@
+const { SlashCommandBuilder } = require('@discordjs/builders')
+const config = require("../config/config.json")
+const Discord = require("discord.js")
+const sqlite3 = require('sqlite3').verbose()
+
+module.exports = {
+  data: new SlashCommandBuilder()
+    .setName('leaderboard')
+    .setDescription('Voir le classement des invitations'),
+  role: ["959209575272312933"],
+
+  async execute(client, interaction) {
+
+    const db = new sqlite3.Database('database.db', sqlite3.OPEN_READWRITE, (err) => {
+      if (err) {
+        console.error(err.message)
+      }
+    })
+
+    db.all(`SELECT * FROM inviter ORDER BY numero DESC`, async (err, row) => {
+      if (err) throw err
+
+      if (row.length <= 0) return interaction.reply({ content: "Aucun classement pour le moment !", ephemeral: true })
+
+      const embed = new Discord.MessageEmbed()
+        .setTitle("Classement des invitations !")
+        .setDescription("Voici le classement :\n \n" + (row.map((e, i) => { return `${i + 1}. **${e.pseudo}** avec ${e.numero} invitations, (${e.normal} normale(s), ${e.partie} partie(s), ${e.bonus} bonus)` })).slice(0, 10).join('\n') + `\n\nBon jeux sur ${config.informations.nom} !`)
+        .setColor(config.embedColor)
+
+      let btn2
+
+      if (row.length <= 10) {
+
+        btn2 = new Discord.MessageActionRow()
+          .addComponents(
+            new Discord.MessageButton()
+              .setCustomId('precedent:1')
+              .setLabel('Page précedente')
+              .setStyle('PRIMARY')
+              .setDisabled(true),
+
+            new Discord.MessageButton()
+              .setCustomId('home')
+              .setLabel('🏠')
+              .setStyle('PRIMARY'),
+
+            new Discord.MessageButton()
+              .setCustomId('suivant:2')
+              .setLabel('Page suivante')
+              .setStyle('PRIMARY')
+              .setDisabled(true),
+          )
+      } else {
+        btn2 = new Discord.MessageActionRow()
+          .addComponents(
+            new Discord.MessageButton()
+              .setCustomId('precedent:1')
+              .setLabel('Page précedente')
+              .setStyle('PRIMARY')
+              .setDisabled(true),
+
+            new Discord.MessageButton()
+              .setCustomId('home')
+              .setLabel('🏠')
+              .setStyle('PRIMARY'),
+
+            new Discord.MessageButton()
+              .setCustomId('suivant:2')
+              .setLabel('Page suivante')
+              .setStyle('PRIMARY'),
+
+          )
+      }
+
+     interaction.reply({ embeds: [embed], components: [btn2] })
+
+
+
+      /**
+       * *
+       * *
+       * * Collector 
+       * *
+       * *
+       */
+
+      const filter = i => i.user.id === interaction.user.id
+
+      const collector = interaction.channel.createMessageComponentCollector({ filter, time: 60000 })
+
+      collector.on('collect', async (i) => {
+
+
+        if (i.customId.includes("precedent:")) {
+
+          const boutonSansString = parseInt(i.customId.replace("precedent:", ""))
+
+          const msg = await interaction.channel.messages.fetch(i.message.id)
+
+          const embedPrecedent = new Discord.MessageEmbed()
+            .setTitle("Classement des invitations !")
+            .setDescription("Voici le classement :\n \n" + (row.map((e, i) => { return `${i + 1}. **${e.pseudo}** avec ${e.numero} invitations, (${e.normal} normale(s), ${e.partie} partie(s), ${e.bonus} bonus)` })).slice(boutonSansString * 10 - 10, boutonSansString * 10).join('\n') + `\n\nBon jeux sur ${config.informations.nom} !`)
+            .setColor(config.embedColor)
+
+          let boutons
+
+          if (boutonSansString === 1) {
+            boutons = new Discord.MessageActionRow()
+              .addComponents(
+                new Discord.MessageButton()
+                  .setCustomId(`precedent:${boutonSansString - 1}`)
+                  .setLabel('Page précedente')
+                  .setStyle('PRIMARY')
+                  .setDisabled(true),
+
+                new Discord.MessageButton()
+                  .setCustomId('home')
+                  .setLabel('🏠')
+                  .setStyle('PRIMARY'),
+
+                new Discord.MessageButton()
+                  .setCustomId(`suivant:${boutonSansString + 1}`)
+                  .setLabel('Page suivante')
+                  .setStyle('PRIMARY'),
+              )
+          } else {
+            boutons = new Discord.MessageActionRow()
+              .addComponents(
+                new Discord.MessageButton()
+                  .setCustomId(`precedent:${boutonSansString - 1}`)
+                  .setLabel('Page précedente')
+                  .setStyle('PRIMARY'),
+
+                new Discord.MessageButton()
+                  .setCustomId('home')
+                  .setLabel('🏠')
+                  .setStyle('PRIMARY'),
+
+                new Discord.MessageButton()
+                  .setCustomId(`suivant:${boutonSansString + 1}`)
+                  .setLabel('Page suivante')
+                  .setStyle('PRIMARY'),
+              )
+          }
+
+          msg.edit({ embeds: [embedPrecedent], components: [boutons] })
+
+          /**
+           * 
+           * 
+           *  BOUTON SUIVANT
+           * 
+           * 
+           */
+
+
+        } else if (i.customId.includes("suivant:")) {
+
+
+          const boutonSansString = parseInt(i.customId.replace("suivant:", ""))
+
+          const msg = await interaction.channel.messages.fetch(i.message.id)
+
+          const embedSuivant = new Discord.MessageEmbed()
+            .setTitle("Classement des invitations !")
+            .setDescription("Voici le classement :\n \n" + (row.map((e, i) => { return `${i + 1}. **${e.pseudo}** avec ${e.numero} invitations, (${e.normal} normale(s), ${e.partie} partie(s), ${e.bonus} bonus)` })).slice(boutonSansString * 10 - 10, boutonSansString * 10).join('\n') + `\n\nBon jeux sur ${config.informations.nom} !`)
+            .setColor(config.embedColor)
+
+          /** 
+           * *
+           * *
+           * * LES BOUTONS
+           * *
+           * *
+           */
+
+          let boutons
+
+          if (row.length <= boutonSansString * 10) {
+            boutons = new Discord.MessageActionRow()
+              .addComponents(
+                new Discord.MessageButton()
+                  .setCustomId(`precedent:${boutonSansString - 1}`)
+                  .setLabel('Page précedente')
+                  .setStyle('PRIMARY'),
+
+                new Discord.MessageButton()
+                  .setCustomId('home')
+                  .setLabel('🏠')
+                  .setStyle('PRIMARY'),
+
+                new Discord.MessageButton()
+                  .setCustomId(`suivant:${boutonSansString + 1}`)
+                  .setLabel('Page suivante')
+                  .setStyle('PRIMARY')
+                  .setDisabled(true),
+              )
+          } else {
+            boutons = new Discord.MessageActionRow()
+              .addComponents(
+                new Discord.MessageButton()
+                  .setCustomId(`precedent:${boutonSansString - 1}`)
+                  .setLabel('Page précedente')
+                  .setStyle('PRIMARY'),
+
+                new Discord.MessageButton()
+                  .setCustomId('home')
+                  .setLabel('🏠')
+                  .setStyle('PRIMARY'),
+
+                new Discord.MessageButton()
+                  .setCustomId(`suivant:${boutonSansString + 1}`)
+                  .setLabel('Page suivante')
+                  .setStyle('PRIMARY'),
+              )
+          }
+
+
+
+          msg.edit({ embeds: [embedSuivant], components: [boutons] })
+
+        } else if (i.customId === 'home') {
+
+          const msg = await interaction.channel.messages.fetch(i.message.id)
+
+          let btn2
+
+          const embed = new Discord.MessageEmbed()
+            .setTitle("Classement des invitations !")
+            .setDescription("Voici le classement :\n \n" + (row.map((e, i) => { return `${i + 1}. **${e.pseudo}** avec ${e.numero} invitations, (${e.normal} normale(s), ${e.partie} partie(s), ${e.bonus} bonus)` })).slice(0, 10).join('\n') + `\n\nBon jeux sur ${config.informations.nom} !`)
+            .setColor(config.embedColor)
+
+
+          if (row.length <= 10) {
+
+            btn2 = new Discord.MessageActionRow()
+              .addComponents(
+                new Discord.MessageButton()
+                  .setCustomId('precedent:1')
+                  .setLabel('Page précedente')
+                  .setStyle('PRIMARY')
+                  .setDisabled(true),
+
+                new Discord.MessageButton()
+                  .setCustomId('home')
+                  .setLabel('🏠')
+                  .setStyle('PRIMARY'),
+
+                new Discord.MessageButton()
+                  .setCustomId('suivant:2')
+                  .setLabel('Page suivante')
+                  .setStyle('PRIMARY')
+                  .setDisabled(true),
+              )
+          } else {
+            btn2 = new Discord.MessageActionRow()
+              .addComponents(
+                new Discord.MessageButton()
+                  .setCustomId('precedent:1')
+                  .setLabel('Page précedente')
+                  .setStyle('PRIMARY')
+                  .setDisabled(true),
+
+                new Discord.MessageButton()
+                  .setCustomId('home')
+                  .setLabel('🏠')
+                  .setStyle('PRIMARY'),
+
+                new Discord.MessageButton()
+                  .setCustomId('suivant:2')
+                  .setLabel('Page suivante')
+                  .setStyle('PRIMARY'),
+
+              )
+          }
+
+          msg.edit({ embeds: [embed], components: [btn2] })
+
+        }
+
+      })
+    })
+  }
+}

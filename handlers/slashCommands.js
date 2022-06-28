@@ -14,12 +14,12 @@ for (const file of fs.readdirSync('./slashCommands').filter(file => file.endsWit
 
     client.on("ready", async() => {
         const guild = client.guilds.cache.get(config.informations.serverId)
-        await guild.commands.set(commands)
+        const cmd = await guild.commands.set(commands)
 
         for (const file of fs.readdirSync('./slashCommands').filter(file => file.endsWith('.js'))) {
             const command = require(`../slashCommands/${file}`)           
             console.log("Commande : " + command.data.name + " ✔️")
-           
+            console.log(cmd.map(cmd => cmd.name))
         }
       })
 }

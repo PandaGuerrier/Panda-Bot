@@ -12,36 +12,15 @@ function getDB() {
 function registerAllDB() {
 	const db = getDB()
 	const tables = [
-		{
-			name: 'GiveAway',
-			columns: [
-				{ name: 'id', type: 'INT' },
-				{ name: 'channelId', type: 'VARCHAR' },
-				{ name: 'lot', type: 'VARCHAR' },
-				{ name: 'gagnants', type: 'INT' },
-				{ name: 'idMsg', type: 'VARCHAR' }
-			]
-		}
+		{name: 'GiveAway',	columns: [	{ name: 'id', type: 'INT' }, { name: 'channelId', type: 'VARCHAR' }, { name: 'lot', type: 'VARCHAR' },	{ name: 'gagnants', type: 'INT' }, { name: 'idMsg', type: 'VARCHAR' }]},
+		{name: 'bots',	columns: [{ name: 'id', type: 'VARCHAR' },	{ name: 'pseudo', type: 'VARCHAR' },]},
+		{name: 'inviter', columns: [{ name: 'id', type: 'VARCHAR' }, { name: 'pseudo', type: 'VARCHAR' }, { name: 'numero', type: 'INT' }, { name: 'partie', type: 'INT' }, { name: 'normal', type: 'INT' }, { name: 'bonus', type: 'INT' }]},
+		{name: 'users',	columns: [{ name: 'id', type: 'VARCHAR' }, { name: 'code', type: 'VARCHAR' }, { name: 'inviterName', type: 'VARCHAR' },	{ name: 'inviterId', type: 'INT' },]},
+		{name: 'setup',	columns: [{ name: 'id', type: 'VARCHAR' }, { name: 'channelId', type: 'VARCHAR' }, { name: 'actif', type: 'BOOLEAN' },]}
 	]
-	const rowtruc = db.each(`SELECT * FROM GiveAway`)
-	if (!rowtruc) db.each(`CREATE TABLE IF NOT EXISTS 'GiveAway' ('id' VARCHAR, 'channelId' VARCHAR, 'lot' VARCHAR, 'gagnants' INT, idMsg VARCHAR)`)
 
-	db.each(`SELECT * FROM bots`, (err, row) => {
-		if (!row) {
-			db.each("CREATE TABLE IF NOT EXISTS 'bots' ('id' VARCHAR, 'pseudo' VARCHAR);")
-		}
-	})
-
-	db.each(`SELECT * FROM inviter`, (err, row) => {
-		if (!row) db.each("CREATE TABLE IF NOT EXISTS 'inviter' ('id' VARCHAR, 'pseudo' VARCHAR, 'numero' INT, 'partie' INT, 'normal' INT, 'bonus' INT)")
-	})
-
-	db.each(`SELECT * FROM users`, (err, row) => {
-		if (!row) db.each("CREATE TABLE IF NOT EXISTS 'users' ('inviterId' VARCHAR, 'inviterName' VARCHAR, 'id' VARCHAR, 'code' VARCHAR)")
-	})
-
-	db.each(`SELECT * FROM setup`, (err, row) => {
-		if (!row) db.each("CREATE TABLE IF NOT EXISTS 'setup' ('id' VARCHAR, 'channelId' VARCHAR,	'actif' BOOLEAN)") && console.log("BBD : ✔️ ")
+	tables.forEach(table => {
+		db.run(`CREATE TABLE IF NOT EXISTS ${table.name} (${table.columns.map(column => column.name + ' ' + column.type).join(', ')})`) 
 	})
 }
 

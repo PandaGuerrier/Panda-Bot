@@ -7,23 +7,23 @@ module.exports = {
 
         if (!interaction.isSelectMenu()) return;
         if (interaction.customId === 'ticket') {
-            createTicket("📂", "plainte", "Bienvenue sur le ticket, \n\nveuillez donner un maximum de preuves !")
-            createTicket("🏁", "starterPack", "Bienvenue sur le ticket, \n\nveuillez envoyer un screenshot de vôtre faction pour recevoir le Starter Pack !")
-            createTicket("🤝", "partenariat", "Bienvenue sur le ticket, \n\nveuillez attendre, un membre du staff va vous répondre !")
-            createTicket("⛑️", "support", "Bienvenue sur le ticket, \n\nveuillez décrire votre problème !")
-            createTicket("❓", "autre", "Bienvenue sur le ticket, \n\nveuillez décrire votre problème !")
-
-            function createTicket(emojie, buttonId, welcomeMessage) {
-
-                if (interaction.values[0] == buttonId) {
-
+            let optionsConfig
+            for(let ticketConfig = 0; ticketConfig < config.tickets.categories.length; ticketConfig++) {
+                if(interaction.values[0] === config.tickets.categories[ticketConfig].name) {
+                    optionsConfig = config.tickets.categories[ticketConfig]
+                } else {
+                    continue
+                }
+            }
+            if (config.tickets.categories.some(r => r.name === interaction.values[0])) {
+                console.log(optionsConfig)
 
                 const em = new Discord.MessageEmbed()
                     .setTitle("Erreur")
                     .setDescription("Vous avez d\u00e9j\u00e0 un ticket ouvert !")
                     .setColor(config.embedColor)
 
-                if (interaction.channel.guild.channels.cache.find(c => c.name == `${emojie}・${interaction.member.user.username}`.split(' ').join('-').toLocaleLowerCase())) return interaction.reply({ embeds: [em], ephemeral: true })
+                if (interaction.channel.guild.channels.cache.find(c => c.name == `${optionsConfig.emoji}・${interaction.member.user.username}`.split(' ').join('-').toLocaleLowerCase())) return interaction.reply({ embeds: [em], ephemeral: true })
 
 
                 const log = new Discord.MessageEmbed()
@@ -33,9 +33,9 @@ module.exports = {
 
                 interaction.message.guild.channels.cache.get(config.channels.log).send({ embeds: [log] })
 
-                interaction.channel.guild.channels.create(emojie + '・' + interaction.member.user.username, {
+                interaction.channel.guild.channels.create(optionsConfig.emoji + '・' + interaction.member.user.username, {
                     type: 'GUILD_TEXT',
-                    parent: config.ticket.categorie,
+                    parent: optionsConfig.categorie,
                     permissionOverwrites: [
                         {
                             id: interaction.message.guild.id,
@@ -45,11 +45,15 @@ module.exports = {
                             allow: ['VIEW_CHANNEL', 'SEND_MESSAGES', 'ATTACH_FILES', 'READ_MESSAGE_HISTORY', 'ADD_REACTIONS'],
                             id: interaction.member.id
                         },
-                        ...config.ticket.rolesAccès.map(id => ({
+                        ...optionsConfig.rolesAccess.map(id => ({
                             allow: ['VIEW_CHANNEL', 'SEND_MESSAGES', 'ATTACH_FILES', 'READ_MESSAGE_HISTORY', 'ADD_REACTIONS'],
                             id: id
-                            })),
-                    
+                        })),
+                        ...config.roles.admin.map(id => ({
+                            allow: ['VIEW_CHANNEL', 'SEND_MESSAGES', 'ATTACH_FILES', 'READ_MESSAGE_HISTORY', 'ADD_REACTIONS'],
+                            id: id
+                        })),
+
                     ]
                 }).then(async (channel) => {
 
@@ -76,16 +80,13 @@ module.exports = {
 
 
                     const closeEmbed = new Discord.MessageEmbed()
-                        .setDescription(welcomeMessage)
+                        .setDescription(optionsConfig.welcomeMessage)
                         .addFields({ name: "Auteur du ticket :", value: interaction.member.user.username }).setColor(config.embedColor)
 
                     channel.send({ embeds: [closeEmbed], components: [row] })
-
-
                 })
-              }
             }
-
         }
     }
 }
+

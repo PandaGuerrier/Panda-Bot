@@ -2,12 +2,12 @@ const { SlashCommandBuilder } = require('@discordjs/builders')
 const Discord = require("discord.js")
 
 module.exports = {
-	data: new SlashCommandBuilder()
-		.setName('close')
-		.setDescription('Fermer le ticket'),
-        role: [],
+    data: new SlashCommandBuilder()
+        .setName('close')
+        .setDescription('Fermer le ticket'),
 
-	async execute(client, interaction) {
+
+    async execute(interaction) {
 
         if (interaction.channel.name.startsWith("❓") || interaction.channel.name.startsWith("⛑️") || interaction.channel.name.startsWith("🤝") || interaction.channel.name.startsWith("🏁") || interaction.channel.name.startsWith("📂")) {
 
@@ -30,11 +30,10 @@ module.exports = {
                         .setStyle('DANGER'),
                 )
 
-
             interaction.reply({ embeds: [embed1], components: [sur] })
-                }
-                else {
-                    return
-                }
-  }
+        }
+        else {
+            return
+        }
+    }
 }

@@ -11,10 +11,10 @@ const db = require("../utils/database").getDB()
             option.setName('quoi')
                 .setDescription('Que veut tu faire ?')
                 .setRequired(true)
-                .addChoice('Setup', 'setup')
-                .addChoice('Remove', 'remove')),
+                .addChoices({name: 'Setup', value: 'setup'})
+                .addChoices({name: 'Remove', value: 'remove'})),
 
-      async execute(client, interaction) {
+      async execute(interaction) {
         const menu = interaction.options.getString("quoi") 
 
         if(menu == 'remove') {

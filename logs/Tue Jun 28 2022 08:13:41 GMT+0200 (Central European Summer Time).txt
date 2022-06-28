@@ -1,0 +1,2 @@
+DiscordAPIError: Invalid Form Body
+components[0].components[0].options[0].emoji.name: Invalid emoji

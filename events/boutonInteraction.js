@@ -104,80 +104,59 @@ module.exports = {
 
         const sum_messages = []
         let last_id = null
-    
+
         while (true) {
-            const messages = await interaction.channel.messages.fetch({ limit: 100, before: last_id })
-            
-            sum_messages.push(...Array.from(messages.map(e => {
-              if(e.author.bot) {return {
+          const messages = await interaction.channel.messages.fetch({ limit: 100, before: last_id })
+
+          sum_messages.push(...Array.from(messages.map(e => {
+            if (e.author.bot) {
+              return {
                 input: 'BOT MESSAGE',
                 sender: "BOT",
                 timestamp: e.createdTimestamp
-              }  
+              }
             } else {
 
-                return {
-                  input: e.content,
-                  sender: e.author.tag,
-                  timestamp: e.createdTimestamp
-                }
+              return {
+                input: e.content,
+                sender: e.author.tag,
+                timestamp: e.createdTimestamp
               }
+            }
 
- 
-            })));
-            last_id = messages.last()?.id
-        
-            if (messages.size != 100) break
+
+          })));
+          last_id = messages.last()?.id
+
+          if (messages.size != 100) break
         }
 
         const sum_messages_a = [];
         let last_id_a = null;
-    
+
         while (true) {
-            const messages = await interaction.channel.messages.fetch({ limit: 100, before: last_id_a });
-            sum_messages_a.push(...Array.from(messages.values()));
-            last_id = messages.last()?.id;
-        
-            if (messages.size != 100) break;
+          const messages = await interaction.channel.messages.fetch({ limit: 100, before: last_id_a });
+          sum_messages_a.push(...Array.from(messages.values()));
+          last_id = messages.last()?.id;
+
+          if (messages.size != 100) break;
         }
 
-       let attch = new Discord.MessageAttachment(Buffer.from(`Tous les messages du ticket ${interaction.channel.name}\n\n` + sum_messages_a.map(m => `${new Date(m.createdAt).toLocaleString('fr-FR')} | ${m.author.tag} -> ${m.attachments.size > 0 ? m.attachments.first().proxyURL : m.content}`).reverse().join('\n') + "\n\n----------------------------------------------"), `transcript_${interaction.channel.name}.txt`)
+        let attch = new Discord.MessageAttachment(Buffer.from(`Tous les messages du ticket ${interaction.channel.name}\n\n` + sum_messages_a.map(m => `${new Date(m.createdAt).toLocaleString('fr-FR')} | ${m.author.tag} -> ${m.attachments.size > 0 ? m.attachments.first().proxyURL : m.content}`).reverse().join('\n') + "\n\n----------------------------------------------"), `transcript_${interaction.channel.name}.txt`)
 
-       let channel = interaction.message.guild.channels.cache.get(config.ticket.transcript)
-
-
+        let channel = interaction.message.guild.channels.cache.get(config.tickets.transcript)
 
         channel.send({
           content: `Tous les messages du ${interaction.channel.name}`,
           files: [attch]
         }).then(e => {
-          const axiosConfig = {
-            method: 'POST',
-            url: 'https://botpanda.vercel.app/api/transcripts/',
-            headers: { 
-              'Content-Type': 'application/json',
-            },
-            data : {
-              id: interaction.channel.id,
-              data: {
-                download: e.attachments.first().url,
-                id: interaction.channel.id,
-                channelName: interaction.channel.name,  
-                messages: sum_messages
-              },
-              guild: "834522966732701706",
-              guildName: "Serveur de test"        
-            }
-          };
-  
-      //    axios(axiosConfig)
           interaction.channel.delete()
         })
-      
+
       }
 
       else {
-        const db = require("./database.js").getDB()
+        const db = require("../utils/database.js").getDB()
 
         const idVerif = interaction.message.embeds[0].footer
 

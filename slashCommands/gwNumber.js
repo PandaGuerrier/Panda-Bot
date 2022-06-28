@@ -7,16 +7,16 @@ module.exports = {
         .setDescription('Voir combien de personnes participent au giveaway !')
         .addStringOption(option => option.setName('id').setDescription("L'id du giveaway").setRequired(true)),
 
-    async execute(client, interaction) {
+    async execute(interaction) {
 
         const id = interaction.options.getString("id")
 
         db.all(`SELECT * FROM ${id}`, (err, row) => {
-            if(!row) return interaction.reply({content: "L'id de ce giveaway n'existe pas !", ephemeral: true})
+            if (!row) return interaction.reply({ content: "L'id de ce giveaway n'existe pas !", ephemeral: true })
             else {
-                if(row.length <= 0) return interaction.reply({content: "Aucun bot kick :O", ephemeral: true})
+                if (row.length <= 0) return interaction.reply({ content: "Aucun bot kick :O", ephemeral: true })
 
-                interaction.reply({content: `Il y a actuellement ${row.length} personne(s) qui participent à ce giveaway !`, ephemeral: true})
+                interaction.reply({ content: `Il y a actuellement ${row.length} personne(s) qui participent à ce giveaway !`, ephemeral: true })
             }
         })
     },

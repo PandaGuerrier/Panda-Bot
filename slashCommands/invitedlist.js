@@ -3,25 +3,18 @@ const {
 } = require('@discordjs/builders')
 const config = require("../config/config.json")
 const Discord = require("discord.js")
-const sqlite3 = require('sqlite3').verbose()
+const db = require("../utils/database").getDB()
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('invitedlist')
     .setDescription('Voir qui la personne mentionnée a invité')
     .addUserOption(option => option.setName('membre').setDescription('Voir ses invitations').setRequired(false)),
-  role: [],
-  async execute(client, interaction) {
+
+  async execute(interaction) {
 
     let membre = interaction.options.getUser("membre")
     if (!membre) membre = interaction.member.user
-
-
-    const db = new sqlite3.Database('database.db', sqlite3.OPEN_READWRITE, (err) => {
-      if (err) {
-        console.error(err.message)
-      }
-    })
 
     db.all(`SELECT * FROM users WHERE inviterId = ${membre.id}`, async (err, row) => {
       if (err) throw err

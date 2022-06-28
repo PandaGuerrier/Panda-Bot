@@ -4,18 +4,16 @@ const Discord = require("discord.js")
 const ms = require("ms")
 
 module.exports = {
-	data: new SlashCommandBuilder()
-		.setName('tempsmute')
-		.setDescription('Mute une personne temporairement !')
+  data: new SlashCommandBuilder()
+    .setName('tempsmute')
+    .setDescription('Mute une personne temporairement !')
     .addUserOption(option => option.setName('ping').setDescription('Le membre a mute').setRequired(true))
     .addStringOption(option => option.setName('raison').setDescription('La raison du mute').setRequired(true))
-		.addIntegerOption(option => option.setName('jours').setDescription('Le nombre de jours a mute').setRequired(true))
-		.addIntegerOption(option => option.setName('heures').setDescription("Le nombre d'heures a mute").setRequired(true))
-		.addIntegerOption(option => option.setName('minutes').setDescription('Le nombre de minutes a mute').setRequired(true)),
-    role: ["959209557719126087", "959209559803711498", "959209560718065704", "959209561678569503"],
+    .addIntegerOption(option => option.setName('jours').setDescription('Le nombre de jours a mute').setRequired(true))
+    .addIntegerOption(option => option.setName('heures').setDescription("Le nombre d'heures a mute").setRequired(true))
+    .addIntegerOption(option => option.setName('minutes').setDescription('Le nombre de minutes a mute').setRequired(true)),
 
-
-	async execute(client, interaction) {
+  async execute(interaction) {
     const member = interaction.options.getMember("ping")
     const reason = interaction.options.getString("raison")
     const d = interaction.options.getInteger("jours")

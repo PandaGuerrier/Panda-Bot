@@ -2,24 +2,18 @@ const {
     SlashCommandBuilder
 } = require('@discordjs/builders')
 const Discord = require("discord.js")
-const sqlite3 = require('sqlite3').verbose()
+const db = require("../utils/database").getDB()
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('reroll')
         .setDescription('Relancer un giveaway')
         .addStringOption(option => option.setName('id').setDescription("L'id giveaway !").setRequired(true)),
-    role: [],
 
-    execute(client, interaction) {
+
+    execute(interaction) {
 
         const idGiveaway = interaction.options.getString("id")
-
-        const db = new sqlite3.Database('database.db', sqlite3.OPEN_READWRITE, (err) => {
-            if (err) {
-                console.error(err.message)
-            }
-        })
 
         db.get(`SELECT name FROM sqlite_master WHERE type='table' AND name='${idGiveaway}'`, (err, row) => {
 
@@ -60,8 +54,6 @@ module.exports = {
 
                         let buttons;
                         db.all(`SELECT * FROM ${idGiveaway}`, async (err, row) => {
-
-                            
                             buttons = new Discord.MessageActionRow()
                                 .addComponents(
                                     new Discord.MessageButton()
@@ -76,33 +68,30 @@ module.exports = {
                                         .setStyle('SECONDARY')
                                         .setDisabled(true),
                                 )
-
-
-
                         })
 
                         const embedFinish = new Discord.MessageEmbed()
-                        .setTitle(":tada: GIVEAWAY FINI :tada:")
-                        .setDescription("Le Giveaway est fini !")
-                        .addFields({
-                            name: "Lot :",
-                            value: `${String(rowa.lot)}`,
-                            inline: true
-                        }, {
-                            name: "Gagnant(s)",
-                            value: `${row.map(e => "<@" + e.id + ">").join("\n")}`,
-                            inline: true
-                        })
-                        .setColor(config.embedColor)
-                        .setThumbnail("https://cdn.discordapp.com/attachments/954766155321602108/960579280516038696/Icone_Tenshi.png")
+                            .setTitle(":tada: GIVEAWAY FINI :tada:")
+                            .setDescription("Le Giveaway est fini !")
+                            .addFields({
+                                name: "Lot :",
+                                value: `${String(rowa.lot)}`,
+                                inline: true
+                            }, {
+                                name: "Gagnant(s)",
+                                value: `${row.map(e => "<@" + e.id + ">").join("\n")}`,
+                                inline: true
+                            })
+                            .setColor(config.embedColor)
+                            .setThumbnail("https://cdn.discordapp.com/attachments/954766155321602108/960579280516038696/Icone_Tenshi.png")
 
-                    messageGiveaway.edit({
-                        embeds: [embedFinish],
-                        components: [buttons]
-                    })
-                    Channel.send({
-                        content: `${row.map(e => "<@" + e.id + ">").join(", ")} ${row.length > 1 ? "ont" : "a"} gagné le giveaway !`
-                    })
+                        messageGiveaway.edit({
+                            embeds: [embedFinish],
+                            components: [buttons]
+                        })
+                        Channel.send({
+                            content: `${row.map(e => "<@" + e.id + ">").join(", ")} ${row.length > 1 ? "ont" : "a"} gagné le giveaway !`
+                        })
 
 
                         interaction.reply({ content: "Le Giveaway a bien été reroll !", ephemeral: true })

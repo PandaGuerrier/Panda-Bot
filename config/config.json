@@ -1,11 +1,34 @@
 {
-    "embedColor": "#00ff00",
+    "embedColor": "#6d9aff",
     "informations": {
+        "serverName": "Server Name",
         "serverId": "834522966732701706",
         "botId": "854441624724308029",
         "status": "b"
     },
     "channels": {
+        "bienvenue": "980530765299343360",
+        "suggestion": "980529944989937677",
+        "log": "980530587037229086"
+    },
+    "roles": {
+        "admin": [
+            "907647524695851058"
+        ],
         "bienvenue": ""
+    },
+    "tickets": {
+        "categories": [
+            {
+                "name": "test",
+                "emoji": "📂",
+                "categorieId": "980529906628821062",
+                "rolesAccess": [
+                    "953693144019521567"
+                ],
+                "welcomeMessage": "salut"
+            }
+        ],
+        "transcript": "980530587037229086"
     }
 }

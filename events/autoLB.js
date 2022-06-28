@@ -12,8 +12,8 @@ module.exports = {
 
         const channel = client.channels.cache.get(row.channelId)
 
-        if(!channel) return
-        
+        if (!channel) return
+
         channel.messages.fetch(row.id).then(msg => {
 
           if (!msg) return
@@ -41,7 +41,7 @@ module.exports = {
             })
           })
         })
-        .catch(err => {console.log("Le message du auto Leaderboard a été supprimé, remetez le !")})
+          .catch(err => { console.log("Le message du auto Leaderboard a été supprimé, remetez le !") })
       })
     }, 10000)
   }

@@ -1,0 +1,1 @@
+TypeError: (intermediate value).goodBye is not a function

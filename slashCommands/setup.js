@@ -10,11 +10,10 @@ module.exports = {
       option.setName('quoi')
         .setDescription('Que veut tu setup ?')
         .setRequired(true)
-        .addChoice('Tickets', 'tickets')
-        .addChoice('Verification', 'verification')),
-  role: [],
+        .addChoices({name: 'Tickets', value: 'tickets'})
+        .addChoices({name: 'Verification', value: 'verification'})),
 
-  async execute(client, interaction) {
+  async execute(interaction) {
 
     const menu = interaction.options.getString("quoi");
 
@@ -28,37 +27,18 @@ module.exports = {
             .setMinValues(1)
             .setMaxValues(1)
             .addOptions([
-              {
-                label: '• Plainte',
-                value: 'plainte',
-                emoji: "📂"
-              },
-              {
-                label: '• Starter Pack',
-                value: 'starterPack',
-                emoji: "🏁"
-              },
-              {
-                label: '• Partenariat',
-                value: 'partenariat',
-                emoji: "🤝"
-              },
-              {
-                label: '• Support',
-                value: 'support',
-                emoji: "⛑️"
-              },
-              {
-                label: '• Autre',
-                value: 'autre',
-                emoji: "❓"
-              }
+              ...config.tickets.categories.map(category => ({
+                  label: category.name,
+                  value: category.name,
+                  emoji: category.emoji
+              }))
+                
             ]),
         );
 
       const emb = new Discord.MessageEmbed()
-        .setTitle("Tenshi - Ticket")
-        .setDescription("Créez un ticket support en **sélectionnant** la catégorie correspondante à votre demande.\n\n:open_file_folder: **- Plainte**\n:checkered_flag: **- Starter Pack**\n:handshake: **- Partenariat**\n:helmet_with_cross: **- Support**\n:question: **- Autre**")
+        .setTitle(config.informations.serverName + " - Ticket")
+        .setDescription("Créez un ticket support en **sélectionnant** la catégorie correspondante à votre demande.\n\n" + config.tickets.categories.map(category => `${category.emoji} **- ${category.name}**`).join("\n"))
         .setColor(config.embedColor)
 
       interaction.channel.send({ embeds: [emb], components: [row] })

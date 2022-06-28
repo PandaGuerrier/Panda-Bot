@@ -2,6 +2,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders')
 const Discord = require("discord.js")
 const ms = require("ms")
 const db = require("../utils/database").getDB()
+const config = require("../config/config.json")
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -15,7 +16,7 @@ module.exports = {
         .addIntegerOption(option => option.setName('heures').setDescription("Le nombre d'heures du giveaway").setRequired(true))
         .addIntegerOption(option => option.setName('minutes').setDescription('Le nombre de minutes du giveaway').setRequired(true)),
 
-    async execute(client, interaction) {
+    async execute(interaction) {
 
         const lot = interaction.options.getString("lot")
         const id = interaction.options.getString("id")
@@ -34,58 +35,94 @@ module.exports = {
 
         db.get(`SELECT * FROM ${id}`, (err, row) => {
 
-            if(row) return interaction.reply({content: "L'id de ce giveaway existe déjà !", ephemeral: true})
+            if (row) return interaction.reply({ content: "L'id de ce giveaway existe déjà !", ephemeral: true })
 
             if (!row) db.each(`CREATE TABLE IF NOT EXISTS '${id}' ('id' VARCHAR, 'top' INTEGER PRIMARY KEY AUTOINCREMENT)`)
-    
-                setTimeout(async () => {
-        
-                    const buttons = new Discord.MessageActionRow()
+
+            setTimeout(async () => {
+
+                const buttons = new Discord.MessageActionRow()
                     .addComponents(
-                      new Discord.MessageButton()
-                        .setCustomId(id)
-                        .setLabel('Participer au giveaway')
-                        .setStyle('PRIMARY'),
+                        new Discord.MessageButton()
+                            .setCustomId(id)
+                            .setLabel('Participer au giveaway')
+                            .setStyle('PRIMARY'),
                     )
 
-                    const embed = new Discord.MessageEmbed()
-                        .setDescription("__**:tada: GIVEAWAY :tada:**__\n\nNombre de gagnants : " + gagnants + " !")
-                        .addFields({
-                            name: "Lot :",
-                            value: lot,
-                            inline: true
-                        }, {
-                            name: "Temps restant :",
-                            value: `<t:${ts()}:R>`,
-                            inline: true
-                        })
-                        .setFooter("id: " + id)
-                        .setColor(config.embedColor)
-                        .setThumbnail("https://cdn.discordapp.com/attachments/954766155321602108/960579280516038696/Icone_Tenshi.png")
-
-        
-                   const messageSend = await Channel.send({
-                        embeds: [embed],
-                        components: [buttons],
+                const embed = new Discord.MessageEmbed()
+                    .setDescription("__**:tada: GIVEAWAY :tada:**__\n\nNombre de gagnants : " + gagnants + " !")
+                    .addFields({
+                        name: "Lot :",
+                        value: lot,
+                        inline: true
+                    }, {
+                        name: "Temps restant :",
+                        value: `<t:${ts()}:R>`,
+                        inline: true
                     })
+                    .setFooter("id: " + id)
+                    .setColor(config.embedColor)
+                    .setThumbnail("https://cdn.discordapp.com/attachments/954766155321602108/960579280516038696/Icone_Tenshi.png")
 
-                    db.get(`SELECT * FROM GiveAway WHERE id = ${id}`, (err, row) => {
-                        if(!row) db.run(`INSERT INTO GiveAway (id, channelId, gagnants, idMsg, lot) VALUES ('${id}', '${Channel.id}', '${gagnants}', '${messageSend.id}', '${lot}')`)
-                    })
 
-                interaction.reply({content: "Le giveaway est en place !", ephemeral: true})
+                const messageSend = await Channel.send({
+                    embeds: [embed],
+                    components: [buttons],
+                })
+
+                db.get(`SELECT * FROM GiveAway WHERE id = ${id}`, (err, row) => {
+                    if (!row) db.run(`INSERT INTO GiveAway (id, channelId, gagnants, idMsg, lot) VALUES ('${id}', '${Channel.id}', '${gagnants}', '${messageSend.id}', '${lot}')`)
+                })
+
+                interaction.reply({ content: "Le giveaway est en place !", ephemeral: true })
 
                 setTimeout(() => {
 
                     db.get(`SELECT name FROM sqlite_master WHERE type='table' AND name='${id}'`, (err, row) => {
 
-                        if(!row) return
-                    
+                        if (!row) return
+
 
                         db.all(`SELECT * FROM ${id} ORDER BY RANDOM() LIMIT ${gagnants}`, (err, row) => {
-                            
-                            if(row.length < gagnants) {
+
+                            if (row.length < gagnants) {
                                 const embedFinish = new Discord.MessageEmbed()
+                                    .setTitle(":tada: GIVEAWAY FINI :tada:")
+                                    .setDescription("Le Giveaway est fini !")
+                                    .addFields({
+                                        name: "Lot :",
+                                        value: lot,
+                                        inline: true
+                                    }, {
+                                        name: "Gagnant(s)",
+                                        value: `Pas assez de participants :(`,
+                                        inline: true
+                                    })
+                                    .setColor(config.embedColor)
+                                    .setFooter("id: " + id)
+                                    .setThumbnail("https://cdn.discordapp.com/attachments/954766155321602108/960579280516038696/Icone_Tenshi.png")
+
+
+                                const buttons = new Discord.MessageActionRow()
+                                    .addComponents(
+                                        new Discord.MessageButton()
+                                            .setCustomId(id)
+                                            .setLabel('Participer au giveaway')
+                                            .setStyle('PRIMARY')
+                                            .setDisabled(true),
+
+                                        new Discord.MessageButton()
+                                            .setCustomId("rien")
+                                            .setLabel('Participants: ' + row.length)
+                                            .setStyle('SECONDARY')
+                                            .setDisabled(true),
+                                    )
+
+                                return messageSend.edit({ embeds: [embedFinish], components: [buttons] }) && Channel.send({ content: "Pas assez de participants pour le tirage au sort !" })
+
+                            }
+
+                            const embedFinish = new Discord.MessageEmbed()
                                 .setTitle(":tada: GIVEAWAY FINI :tada:")
                                 .setDescription("Le Giveaway est fini !")
                                 .addFields({
@@ -94,78 +131,42 @@ module.exports = {
                                     inline: true
                                 }, {
                                     name: "Gagnant(s)",
-                                    value: `Pas assez de participants :(`,
+                                    value: `${row.map(e => "<@" + e.id + ">").join("\n")}`,
                                     inline: true
                                 })
                                 .setColor(config.embedColor)
                                 .setFooter("id: " + id)
                                 .setThumbnail("https://cdn.discordapp.com/attachments/954766155321602108/960579280516038696/Icone_Tenshi.png")
-
-    
-                                const buttons = new Discord.MessageActionRow()
-                                .addComponents(
-                                  new Discord.MessageButton()
-                                    .setCustomId(id)
-                                    .setLabel('Participer au giveaway')
-                                    .setStyle('PRIMARY')
-                                    .setDisabled(true),
-
-                                    new Discord.MessageButton()
-                                    .setCustomId("rien")
-                                    .setLabel('Participants: ' + row.length)
-                                    .setStyle('SECONDARY')
-                                    .setDisabled(true),
-                                )
-    
-                               return messageSend.edit({embeds: [embedFinish], components: [buttons]}) && Channel.send({content: "Pas assez de participants pour le tirage au sort !"})
-
-                            }
-
-                            const embedFinish = new Discord.MessageEmbed()
-                            .setTitle(":tada: GIVEAWAY FINI :tada:")
-                            .setDescription("Le Giveaway est fini !")
-                            .addFields({
-                                name: "Lot :",
-                                value: lot,
-                                inline: true
-                            }, {
-                                name: "Gagnant(s)",
-                                value: `${row.map(e => "<@" + e.id + ">").join("\n")}`,
-                                inline: true
-                            })
-                            .setColor(config.embedColor)
-                            .setFooter("id: " + id)
-                            .setThumbnail("https://cdn.discordapp.com/attachments/954766155321602108/960579280516038696/Icone_Tenshi.png")
                             let buttons;
                             db.all(`SELECT * FROM ${id}`, async (err, row) => {
 
-                            buttons = new Discord.MessageActionRow()
-                            .addComponents(
-                                new Discord.MessageButton()
-                                .setCustomId(id)
-                                .setLabel('Participer au giveaway')
-                                .setStyle('PRIMARY')
-                                .setDisabled(true),
+                                buttons = new Discord.MessageActionRow()
+                                    .addComponents(
+                                        new Discord.MessageButton()
+                                            .setCustomId(id)
+                                            .setLabel('Participer au giveaway')
+                                            .setStyle('PRIMARY')
+                                            .setDisabled(true),
 
-                                new Discord.MessageButton()
-                                .setCustomId("rien")
-                                .setLabel('Participants: ' + row.length)
-                                .setStyle('SECONDARY')
-                                .setDisabled(true),
-                            )
+                                        new Discord.MessageButton()
+                                            .setCustomId("rien")
+                                            .setLabel('Participants: ' + row.length)
+                                            .setStyle('SECONDARY')
+                                            .setDisabled(true),
+                                    )
 
 
                             })
 
-                            messageSend.edit({embeds: [embedFinish], components: [buttons]})
-                            Channel.send({content:`${row.map(e => "<@" + e.id +">").join(", ")} ${row.length > 1 ? "ont" : "a"} gagné le giveaway !`})
+                            messageSend.edit({ embeds: [embedFinish], components: [buttons] })
+                            Channel.send({ content: `${row.map(e => "<@" + e.id + ">").join(", ")} ${row.length > 1 ? "ont" : "a"} gagné le giveaway !` })
                         })
-                        
+
                     })
-                    
+
                 }, ms(days + "d") + ms(hours + "h") + ms(minutes + "m"))
-        
-                }, 1000)
+
+            }, 1000)
         })
 
         /*

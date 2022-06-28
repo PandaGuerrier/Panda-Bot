@@ -1,21 +1,14 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
 const config = require("../config/config.json")
 const Discord = require("discord.js")
-const sqlite3 = require('sqlite3').verbose()
+const db = require("../utils/database").getDB()
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('leaderboard')
     .setDescription('Voir le classement des invitations'),
-  role: ["959209575272312933"],
 
-  async execute(client, interaction) {
-
-    const db = new sqlite3.Database('database.db', sqlite3.OPEN_READWRITE, (err) => {
-      if (err) {
-        console.error(err.message)
-      }
-    })
+  async execute(interaction) {
 
     db.all(`SELECT * FROM inviter ORDER BY numero DESC`, async (err, row) => {
       if (err) throw err
@@ -72,7 +65,7 @@ module.exports = {
           )
       }
 
-     interaction.reply({ embeds: [embed], components: [btn2] })
+      interaction.reply({ embeds: [embed], components: [btn2] })
 
 
 

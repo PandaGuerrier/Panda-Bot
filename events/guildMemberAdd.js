@@ -18,7 +18,7 @@ module.exports = {
 
         if (!invite) {
           const bienvenueEmbed = new Discord.MessageEmbed()
-            .setTitle("Bienvenue sur " + config.informations.nom + " !")
+            .setTitle("Bienvenue sur " + config.informations.serverName + " !")
             .setDescription("Bienvenue à toi " + member.user.tag + " sur le serveur.\n\nNous sommes désormais  **" + member.guild.memberCount + "** membres.").setColor(config.embedColor)
             .setThumbnail(member.displayAvatarURL())
 
@@ -26,10 +26,10 @@ module.exports = {
 
         } else {
 
-          new Invite(invite.inviter, member).welcome()
+          new Invite(invite.inviter, member, invite.code).welcome()
 
           const bienvenueEmbed = new Discord.MessageEmbed()
-            .setTitle("Bienvenue sur " + config.informations.nom + " !")
+            .setTitle("Bienvenue sur " + config.informations.serverName + " !")
             .setDescription("Bienvenue à toi " + member.user.tag + " sur le serveur.\nIl a été invité par " + invite.inviter.tag + "\n\nNous sommes désormais  **" + member.guild.memberCount + "** membres.").setColor(config.embedColor)
             .setThumbnail(member.displayAvatarURL())
           await channelBienvenue.send({ embeds: [bienvenueEmbed] })

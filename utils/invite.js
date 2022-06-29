@@ -25,7 +25,7 @@ class Invite {
     })
   }
 
-  async goodBye(member) {
+  goodBye(member) {
     getDB().get(`SELECT * FROM users WHERE id='${member.user.id}'`, (err, dataUser) => {
 
       if (!dataUser) {
@@ -43,6 +43,22 @@ class Invite {
         }
       }
     })
+  }
+
+  recharge(invite) {
+    invite.client.guilds.cache.forEach(guild => {
+      guild.invites.fetch()
+          .then(invites => {
+
+              const codeUses = new Map()
+              invites.each(inv => codeUses.set(inv.code, inv.uses))
+
+              invite.client.invites.set(guild.id, codeUses)
+          })
+          .catch(err => {
+              console.log(err)
+          })
+  })
   }
 }
 

@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
-const Discord = require("discord.js")
+const { MessageEmbed } = require("discord.js")
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -12,7 +12,7 @@ module.exports = {
 
             const membre = interaction.options.getUser("mention")
 
-            const embed = new Discord.MessageEmbed()
+            const embed = new MessageEmbed()
                 .setTitle("Succ\u00e8s")
                 .setDescription(`J'ai bien ajout\u00e9 ${membre} au ticket !`)
                 .setColor(config.embedColor)

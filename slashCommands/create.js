@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
-const Discord = require("discord.js")
+const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js")
 const ms = require("ms")
 const db = require("../utils/database").getDB()
 const config = require("../config/config.json")
@@ -41,15 +41,15 @@ module.exports = {
 
             setTimeout(async () => {
 
-                const buttons = new Discord.MessageActionRow()
+                const buttons = new MessageActionRow()
                     .addComponents(
-                        new Discord.MessageButton()
+                        new MessageButton()
                             .setCustomId(id)
                             .setLabel('Participer au giveaway')
                             .setStyle('PRIMARY'),
                     )
 
-                const embed = new Discord.MessageEmbed()
+                const embed = new MessageEmbed()
                     .setDescription("__**:tada: GIVEAWAY :tada:**__\n\nNombre de gagnants : " + gagnants + " !")
                     .addFields({
                         name: "Lot :",
@@ -86,7 +86,7 @@ module.exports = {
                         db.all(`SELECT * FROM ${id} ORDER BY RANDOM() LIMIT ${gagnants}`, (err, row) => {
 
                             if (row.length < gagnants) {
-                                const embedFinish = new Discord.MessageEmbed()
+                                const embedFinish = new MessageEmbed()
                                     .setTitle(":tada: GIVEAWAY FINI :tada:")
                                     .setDescription("Le Giveaway est fini !")
                                     .addFields({
@@ -103,15 +103,15 @@ module.exports = {
                                     .setThumbnail("https://cdn.discordapp.com/attachments/954766155321602108/960579280516038696/Icone_Tenshi.png")
 
 
-                                const buttons = new Discord.MessageActionRow()
+                                const buttons = new MessageActionRow()
                                     .addComponents(
-                                        new Discord.MessageButton()
+                                        new MessageButton()
                                             .setCustomId(id)
                                             .setLabel('Participer au giveaway')
                                             .setStyle('PRIMARY')
                                             .setDisabled(true),
 
-                                        new Discord.MessageButton()
+                                        new MessageButton()
                                             .setCustomId("rien")
                                             .setLabel('Participants: ' + row.length)
                                             .setStyle('SECONDARY')
@@ -122,7 +122,7 @@ module.exports = {
 
                             }
 
-                            const embedFinish = new Discord.MessageEmbed()
+                            const embedFinish = new MessageEmbed()
                                 .setTitle(":tada: GIVEAWAY FINI :tada:")
                                 .setDescription("Le Giveaway est fini !")
                                 .addFields({
@@ -140,15 +140,15 @@ module.exports = {
                             let buttons;
                             db.all(`SELECT * FROM ${id}`, async (err, row) => {
 
-                                buttons = new Discord.MessageActionRow()
+                                buttons = new MessageActionRow()
                                     .addComponents(
-                                        new Discord.MessageButton()
+                                        new MessageButton()
                                             .setCustomId(id)
                                             .setLabel('Participer au giveaway')
                                             .setStyle('PRIMARY')
                                             .setDisabled(true),
 
-                                        new Discord.MessageButton()
+                                        new MessageButton()
                                             .setCustomId("rien")
                                             .setLabel('Participants: ' + row.length)
                                             .setStyle('SECONDARY')

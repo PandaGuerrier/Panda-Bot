@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
 const config = require("../config/config.json")
-const Discord = require("discord.js")
+const { MessageEmbed } = require("discord.js")
 const ms = require("ms")
 
 module.exports = {
@@ -24,7 +24,7 @@ module.exports = {
 
     if (member.permissions.has("ADMINISTRATOR")) return interaction.reply({ content: "Je ne peux pas mute cette personne :/ !", ephemeral: true })
 
-    const embedSendMuted = new Discord.MessageEmbed()
+    const embedSendMuted = new MessageEmbed()
       .setDescription("Vous avez \u00e9t\u00e9 mute de " + config.informations.serverName + " !")
       .addFields(
         { name: "Mute par : ", value: interaction.member.user.username, inline: true },
@@ -32,7 +32,7 @@ module.exports = {
       ).setColor(config.embedColor)
 
 
-    const embedSenStaff = new Discord.MessageEmbed()
+    const embedSenStaff = new MessageEmbed()
       .setDescription(`Vous avez bien mute : ${member}`)
       .addFields(
         { name: "Sera unmute dans :", value: "<t:" + tempsRestant() + ":R>" },
@@ -42,7 +42,7 @@ module.exports = {
     member.send({ embeds: [embedSendMuted] }).catch()
     interaction.reply({ embeds: [embedSenStaff], ephemeral: true })
 
-    const log = new Discord.MessageEmbed()
+    const log = new MessageEmbed()
       .setDescription(interaction.member.user.tag + " a mute " + member.user.tag + " pour la raison : " + String(reason)).setColor(config.embedColor)
 
     interaction.guild.channels.cache.get(config.channels.log).send({ embeds: [log] })

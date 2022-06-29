@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
 const config = require("../config/config.json")
-const Discord = require("discord.js")
+const { MessageEmbed } = require("discord.js")
 const db = require("../utils/database").getDB()
 
 module.exports = {
@@ -32,7 +32,7 @@ module.exports = {
       if (!row) {
         db.run(`INSERT INTO inviter (pseudo, id, numero, partie, normal, bonus) VALUES ('${membre.tag}', '${membre.id}', '${actuelle}', ${partie}, ${normale}, ${bonus})`)
 
-        const embedRien = new Discord.MessageEmbed()
+        const embedRien = new MessageEmbed()
           .setDescription(`${membre} (${membre.username}) à maintenant ${actuelle} invitations (${normale} normales, ${partie} parties, ${bonus} bonus)`)
           .setColor(config.embedColor)
 
@@ -43,7 +43,7 @@ module.exports = {
         if (esChoix == 'edit') {
           db.run(`UPDATE inviter SET numero='${row.numero + actuelle}', normal='${row.normal + normale}', partie='${row.partie + partie}', bonus='${row.bonus + bonus}' WHERE id = ${membre.id}`)
 
-          const embedEdit = new Discord.MessageEmbed()
+          const embedEdit = new MessageEmbed()
             .setDescription(`${membre} (${membre.username}) à maintenant ${actuelle + row.numero} invitations (${normale + row.normal} normales, ${partie + row.partie} parties, ${bonus + row.bonus} bonus)`)
             .setColor(config.embedColor)
 
@@ -52,7 +52,7 @@ module.exports = {
         } else if (esChoix == 'set') {
           db.run(`UPDATE inviter SET numero='${actuelle}', normal='${normale}', partie='${partie}', bonus='${bonus}' WHERE id = ${membre.id}`)
 
-          const embedSet = new Discord.MessageEmbed()
+          const embedSet = new MessageEmbed()
             .setDescription(`${membre} (${membre.username}) à maintenant ${actuelle} invitations (${normale} normales, ${partie} parties, ${bonus} bonus)`)
             .setColor(config.embedColor)
 

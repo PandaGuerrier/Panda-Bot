@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
-const Discord = require("discord.js")
+const { MessageEmbed } = require("discord.js")
 const db = require("../utils/database").getDB()
 
 module.exports = {
@@ -13,7 +13,7 @@ module.exports = {
 
             if (!row) return interaction.reply({ content: "Aucun giveaway n'est dans la base de donnée !", ephemeral: true })
 
-            const embed = new Discord.MessageEmbed()
+            const embed = new MessageEmbed()
                 .setDescription("**Voici les giveaway :** \n\n" + (row.map((e, i) => { return i + 1 + ". **ID:** " + e.id + ", **Lot:** " + e.lot }).join("\n")))
                 .setColor(config.embedColor)
 

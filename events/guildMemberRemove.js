@@ -11,6 +11,6 @@ module.exports = {
 
         newInvites.each(inv => cachedInvites.set(inv.code, inv.uses))
         member.client.invites.set(member.guild.id, cachedInvites)
-        
+
     }
 }

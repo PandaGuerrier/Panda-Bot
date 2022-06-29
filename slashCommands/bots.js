@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const config = require("../config/config.json");
-const Discord = require("discord.js")
+const { MessageEmbed } = require("discord.js")
 const db = require("../utils/database").getDB()
 
 module.exports = {
@@ -15,7 +15,7 @@ module.exports = {
 
       if (row.length <= 0) return interaction.reply({ content: "Aucun bot kick :O", ephemeral: true })
 
-      const embed = new Discord.MessageEmbed()
+      const embed = new MessageEmbed()
         .setDescription(`${row.length} bots kick par le superbe anti bot !`)
         .setColor(config.embedColor)
 

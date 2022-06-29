@@ -1,5 +1,5 @@
 const config = require("../config/config.json")
-const Discord = require("discord.js")
+const { MessageEmbed } = require("discord.js")
 const Invite = require("../utils/invite")
 const AntiBot = require("../utils/antibot")
 
@@ -14,7 +14,7 @@ module.exports = {
       try {
         const invite = invitesList.find(inv => cachedInvites.get(inv.code) < inv.uses)
         if (!invite) {
-          const bienvenueEmbed = new Discord.MessageEmbed()
+          const bienvenueEmbed = new MessageEmbed()
             .setTitle("Bienvenue sur " + config.informations.serverName + " !")
             .setDescription("Bienvenue à toi " + member.user.tag + " sur le serveur.\n\nNous sommes désormais  **" + member.guild.memberCount + "** membres.").setColor(config.embedColor)
             .setThumbnail(member.displayAvatarURL())
@@ -22,7 +22,7 @@ module.exports = {
         } else {
           new Invite(invite.inviter, member, invite.code).welcome()
 
-          const bienvenueEmbed = new Discord.MessageEmbed()
+          const bienvenueEmbed = new MessageEmbed()
             .setTitle("Bienvenue sur " + config.informations.serverName + " !")
             .setDescription("Bienvenue à toi " + member.user.tag + " sur le serveur.\nIl a été invité par " + invite.inviter.tag + "\n\nNous sommes désormais  **" + member.guild.memberCount + "** membres.").setColor(config.embedColor)
             .setThumbnail(member.displayAvatarURL())

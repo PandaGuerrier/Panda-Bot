@@ -1,8 +1,6 @@
-const {
-  SlashCommandBuilder
-} = require('@discordjs/builders')
+const { SlashCommandBuilder } = require('@discordjs/builders')
 const config = require("../config/config.json")
-const Discord = require("discord.js")
+const { MessageEmbed } = require("discord.js")
 const db = require("../utils/database").getDB()
 
 module.exports = {
@@ -25,7 +23,7 @@ module.exports = {
         ephemeral: true
       })
 
-      const embed = new Discord.MessageEmbed()
+      const embed = new MessageEmbed()
         .setTitle(`${membre.id === interaction.member.user.id ? "Vous avez" : `${membre} a`} invité :`)
         .setDescription((row.map((e, i) => {
           return `${i + 1}. **<@${e.id}>**`

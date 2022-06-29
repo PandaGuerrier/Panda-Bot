@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
-const Discord = require("discord.js")
+const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js")
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -11,19 +11,19 @@ module.exports = {
 
         if (interaction.channel.name.startsWith("❓") || interaction.channel.name.startsWith("⛑️") || interaction.channel.name.startsWith("🤝") || interaction.channel.name.startsWith("🏁") || interaction.channel.name.startsWith("📂")) {
 
-            const embed1 = new Discord.MessageEmbed()
+            const embed1 = new MessageEmbed()
                 .setTitle("TICKET")
                 .setDescription("Êtes vous sûr de vouloir fermer le ticket ?")
                 .setColor(config.embedColor)
-            const sur = new Discord.MessageActionRow()
+            const sur = new MessageActionRow()
                 .addComponents(
-                    new Discord.MessageButton()
+                    new MessageButton()
                         .setCustomId('closed')
                         .setLabel('Oui')
                         .setEmoji('\u2714\ufe0f')
                         .setStyle('PRIMARY'),
 
-                    new Discord.MessageButton()
+                    new MessageButton()
                         .setCustomId('nan')
                         .setLabel('Non')
                         .setEmoji("\u274c")

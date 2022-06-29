@@ -1,4 +1,4 @@
-const Discord = require("discord.js")
+const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js")
 const config = require("../config/config.json")
 
 module.exports = {
@@ -21,7 +21,7 @@ module.exports = {
 
                 await interaction.message.edit()
 
-                const em = new Discord.MessageEmbed()
+                const em = new MessageEmbed()
                     .setTitle("Erreur")
                     .setDescription("Vous avez d\u00e9j\u00e0 un ticket ouvert !")
                     .setColor(config.embedColor)
@@ -29,7 +29,7 @@ module.exports = {
                 if (interaction.channel.guild.channels.cache.find(c => c.name == `${optionsConfig.emoji}・${interaction.member.user.username}`.split(' ').join('-').toLocaleLowerCase())) return interaction.reply({ embeds: [em], ephemeral: true })
 
 
-                const log = new Discord.MessageEmbed()
+                const log = new MessageEmbed()
                     .setTitle('Nouveau Ticket')
                     .setColor('#2BFA02')
                     .setDescription(interaction.member.user.tag + " \u00e0 ouvert un ticket !")
@@ -60,7 +60,7 @@ module.exports = {
                     ]
                 }).then(async (channel) => {
 
-                    const openEmbed = new Discord.MessageEmbed()
+                    const openEmbed = new MessageEmbed()
                         .setTitle("Ticket ouvert !")
                         .setDescription("Channel : <#" + channel + ">")
                         .setColor(config.embedColor)
@@ -72,9 +72,9 @@ module.exports = {
                             sent.delete()
                         }, 500)
                     })
-                    const row = new Discord.MessageActionRow()
+                    const row = new MessageActionRow()
                         .addComponents(
-                            new Discord.MessageButton()
+                            new MessageButton()
                                 .setCustomId('closed2')
                                 .setLabel('Fermer')
                                 .setEmoji("🗑️")
@@ -82,7 +82,7 @@ module.exports = {
                         )
 
 
-                    const closeEmbed = new Discord.MessageEmbed()
+                    const closeEmbed = new MessageEmbed()
                         .setDescription(optionsConfig.welcomeMessage)
                         .addFields({ name: "Auteur du ticket :", value: interaction.member.user.username }).setColor(config.embedColor)
 

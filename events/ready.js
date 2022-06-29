@@ -7,19 +7,19 @@ module.exports = {
 
     console.log("Connect\u00e9 ❤️")
     registerAllDB()
-    client.guilds.cache.forEach(guild => {
-      guild.invites.fetch()
-        .then(invites => {
+      client.guilds.cache.forEach(guild => {
+        guild.invites.fetch()
+          .then(invites => {
 
-          const codeUses = new Map()
-          invites.each(inv => codeUses.set(inv.code, inv.uses))
+            const codeUses = new Map()
+            invites.each(inv => codeUses.set(inv.code, inv.uses))
 
-          client.invites.set(guild.id, codeUses)
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    })
+            client.invites.set(guild.id, codeUses)
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      })
 
 
     client.user.setActivity(`${config.informations.status}`, {

@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
-const Discord = require("discord.js")
+const { MessageEmbed } = require("discord.js")
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -12,7 +12,7 @@ module.exports = {
         let nm = interaction.options.getInteger("nombre")
 
         if (nm < 0) return interaction.reply({ content: "Veuillez entrer un nombre sup\u00e9rieur à 0 !", ephemeral: true })
-        const emb = new Discord.MessageEmbed()
+        const emb = new MessageEmbed()
             .setTitle("Succ\u00e8s !")
             .setDescription("J'ai bien supprim\u00e9 " + nm + " messages !")
             .setColor(config.embedColor)

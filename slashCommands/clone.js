@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
-const Discord = require("discord.js")
+const { MessageEmbed } = require("discord.js")
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -12,7 +12,7 @@ module.exports = {
         interaction.channel.delete()
         chan.setPosition(interaction.channel.position)
 
-        const embed = new Discord.MessageEmbed()
+        const embed = new MessageEmbed()
             .setTitle("CLONE")
             .setDescription("J'ai bien clon\u00e9 le channel : " + chan.name + " !")
             .setColor(config.embedColor)

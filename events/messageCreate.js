@@ -1,4 +1,4 @@
-const Discord = require("discord.js")
+const { MessageEmbed } = require("discord.js")
 const config = require("../config/config.json")
 
 module.exports = {
@@ -18,7 +18,7 @@ module.exports = {
 
       message.delete()
 
-      const embed = new Discord.MessageEmbed()
+      const embed = new MessageEmbed()
         .setTitle('Nouvelle Suggestion')
         .addFields(
           { name: 'Suggestion de :', value: `${message.author.tag}`, inline: false },

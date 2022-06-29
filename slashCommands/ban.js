@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
 const config = require("../config/config.json")
-const Discord = require("discord.js")
+const { MessageEmbed } = require("discord.js")
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -16,7 +16,7 @@ module.exports = {
 
     if (interaction.member.user.id == mem) return interaction.reply({ content: `Tu ne peux pas te ban toi m\u00eame !`, ephemeral: true })
 
-    const emb = new Discord.MessageEmbed()
+    const emb = new MessageEmbed()
       .setTitle("Vous avez \u00e9t\u00e9 banni de " + config.informations.serverName + " !")
       .addFields(
         { name: "Banni par : ", value: interaction.member.user.username, inline: true },
@@ -25,7 +25,7 @@ module.exports = {
       .setColor("#FF0000")
 
 
-    const emb1 = new Discord.MessageEmbed()
+    const emb1 = new MessageEmbed()
       .setTitle("Succ\u00e8s !")
       .setDescription("Vous avez bien banni : " + mem.tag)
       .addFields(
@@ -38,7 +38,7 @@ module.exports = {
     })
     interaction.reply({ embeds: [emb1], ephemeral: true })
 
-    const log = new Discord.MessageEmbed()
+    const log = new MessageEmbed()
       .setDescription(interaction.member.user.tag + " a banni " + mem.tag + " pour la raison : " + String(EmbedDescription))
       .setColor("#FF0000")
 

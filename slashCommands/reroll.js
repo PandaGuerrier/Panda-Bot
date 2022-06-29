@@ -1,7 +1,7 @@
 const {
     SlashCommandBuilder
 } = require('@discordjs/builders')
-const Discord = require("discord.js")
+const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js")
 const db = require("../utils/database").getDB()
 
 module.exports = {
@@ -54,15 +54,15 @@ module.exports = {
 
                         let buttons;
                         db.all(`SELECT * FROM ${idGiveaway}`, async (err, row) => {
-                            buttons = new Discord.MessageActionRow()
+                            buttons = new MessageActionRow()
                                 .addComponents(
-                                    new Discord.MessageButton()
+                                    new MessageButton()
                                         .setCustomId("rien")
                                         .setLabel('Participer au giveaway')
                                         .setStyle('PRIMARY')
                                         .setDisabled(true),
 
-                                    new Discord.MessageButton()
+                                    new MessageButton()
                                         .setCustomId("rien")
                                         .setLabel('Participants: ' + row.length)
                                         .setStyle('SECONDARY')
@@ -70,7 +70,7 @@ module.exports = {
                                 )
                         })
 
-                        const embedFinish = new Discord.MessageEmbed()
+                        const embedFinish = new MessageEmbed()
                             .setTitle(":tada: GIVEAWAY FINI :tada:")
                             .setDescription("Le Giveaway est fini !")
                             .addFields({

@@ -1,1 +1,0 @@
-ReferenceError: emojie is not defined

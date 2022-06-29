@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
-const Discord = require("discord.js")
+const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js")
 const config = require("../config/config.json")
 
 module.exports = {
@@ -19,9 +19,9 @@ module.exports = {
 
     if (menu === "tickets") {
 
-      const row = new Discord.MessageActionRow()
+      const row = new MessageActionRow()
         .addComponents(
-          new Discord.MessageSelectMenu()
+          new MessageSelectMenu()
             .setCustomId('ticket')
             .setPlaceholder('Sélectionnez la raison du ticket')
             .setMinValues(1)
@@ -36,7 +36,7 @@ module.exports = {
             ]),
         );
 
-      const emb = new Discord.MessageEmbed()
+      const emb = new MessageEmbed()
         .setTitle(config.informations.serverName + " - Ticket")
         .setDescription("Créez un ticket support en **sélectionnant** la catégorie correspondante à votre demande.\n\n" + config.tickets.categories.map(category => `${category.emoji} **- ${category.name}**`).join("\n"))
         .setColor(config.embedColor)
@@ -44,16 +44,16 @@ module.exports = {
       interaction.channel.send({ embeds: [emb], components: [row] })
       interaction.reply({ content: "C'est fait !", ephemeral: true })
     } else if (menu === "verification") {
-      const row = new Discord.MessageActionRow()
+      const row = new MessageActionRow()
         .addComponents(
-          new Discord.MessageButton()
+          new MessageButton()
             .setCustomId('boutonVerification')
             .setLabel('Verification')
             .setEmoji("🛡️")
             .setStyle('PRIMARY'),
         );
 
-      const emb = new Discord.MessageEmbed()
+      const emb = new MessageEmbed()
         .setDescription(`Pour éviter toutes attaques de bots, nous avons mis en place un système **ANTI-BOT**.\n\nLa seule chose que vous avez à faire c'est de cliquer sur le bouton ci dessous.\n\n**Bon jeux sur Tenshi.**`)
         .setColor(config.embedColor)
         .setImage("https://cdn.discordapp.com/attachments/959519366892908544/960288664976523364/logo_tenshi2.png")

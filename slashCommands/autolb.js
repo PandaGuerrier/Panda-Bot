@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
 const config = require("../config/config.json")
-const Discord = require("discord.js")
+const { MessageEmbed } = require("discord.js")
 const db = require("../utils/database").getDB()
 
   module.exports = {
@@ -33,7 +33,7 @@ const db = require("../utils/database").getDB()
               })
             } else {
         
-                  const embed = new Discord.MessageEmbed()
+                  const embed = new MessageEmbed()
                   .setTitle("INSTALLATION...")
                   .setColor(config.embedColor)
         

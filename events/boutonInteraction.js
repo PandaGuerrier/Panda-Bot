@@ -1,4 +1,4 @@
-const Discord = require("discord.js")
+const { MessageEmbed, MessageActionRow, MessageButton, MessageAttachment } = require("discord.js")
 const config = require("../config/config.json")
 
 module.exports = {
@@ -24,7 +24,7 @@ module.exports = {
           return interaction.deferUpdate();
         }
 
-        const verif = new Discord.MessageEmbed()
+        const verif = new MessageEmbed()
           .setDescription("Tu as bien été vérifié !")
           .setColor(config.embedColor)
 
@@ -46,19 +46,19 @@ module.exports = {
       *  *  *  *  *  *  *  *  *  *  *  *  *  *  
       */
       else if (interaction.customId === "closed2") {
-        const embed1 = new Discord.MessageEmbed()
+        const embed1 = new MessageEmbed()
           .setTitle("TICKET")
           .setDescription("Êtes vous sûr de vouloir fermer le ticket ?")
           .setColor(config.embedColor)
-        const sur = new Discord.MessageActionRow()
+        const sur = new MessageActionRow()
           .addComponents(
-            new Discord.MessageButton()
+            new MessageButton()
               .setCustomId('closed')
               .setLabel('Oui')
               .setEmoji('\u2714\ufe0f')
               .setStyle('PRIMARY'),
 
-            new Discord.MessageButton()
+            new MessageButton()
               .setCustomId('nan')
               .setLabel('Non')
               .setEmoji("\u274c")
@@ -79,7 +79,7 @@ module.exports = {
 
       else if (interaction.customId === "nan") {
         interaction.message.delete()
-        const reste = new Discord.MessageEmbed()
+        const reste = new MessageEmbed()
           .setTitle("Le ticket reste ouvert !").setColor(config.embedColor)
 
 
@@ -95,7 +95,7 @@ module.exports = {
       */
 
       else if (interaction.customId === "closed") {
-        const log = new Discord.MessageEmbed()
+        const log = new MessageEmbed()
           .setTitle('Ticket Ferm\u00e9')
           .setColor('#FF0000')
           .setDescription(`${interaction.member.user}` + " a ferm\u00e9 un ticket ! ( " + interaction.channel.name + " )")
@@ -142,7 +142,7 @@ module.exports = {
           if (messages.size != 100) break;
         }
 
-        let attch = new Discord.MessageAttachment(Buffer.from(`Tous les messages du ticket ${interaction.channel.name}\n\n` + sum_messages_a.map(m => `${new Date(m.createdAt).toLocaleString('fr-FR')} | ${m.author.tag} -> ${m.attachments.size > 0 ? m.attachments.first().proxyURL : m.content}`).reverse().join('\n') + "\n\n----------------------------------------------"), `transcript_${interaction.channel.name}.txt`)
+        let attch = new MessageAttachment(Buffer.from(`Tous les messages du ticket ${interaction.channel.name}\n\n` + sum_messages_a.map(m => `${new Date(m.createdAt).toLocaleString('fr-FR')} | ${m.author.tag} -> ${m.attachments.size > 0 ? m.attachments.first().proxyURL : m.content}`).reverse().join('\n') + "\n\n----------------------------------------------"), `transcript_${interaction.channel.name}.txt`)
 
         let channel = interaction.message.guild.channels.cache.get(config.tickets.transcript)
 
@@ -153,9 +153,7 @@ module.exports = {
           interaction.channel.delete()
         })
 
-      }
-
-      else {
+      } else {
         const db = require("../utils/database.js").getDB()
 
         const idVerif = interaction.message.embeds[0].footer
@@ -170,21 +168,21 @@ module.exports = {
           if (!row) {
             db.run(`INSERT INTO ${id} (id) VALUES ('${interaction.user.id}')`)
 
-            const embedPRIMARY = new Discord.MessageEmbed()
+            const embedPRIMARY = new MessageEmbed()
               .setDescription("Vous avez bien été enregistré au giveaway !")
               .setColor(config.embedColor)
 
             interaction.reply({ embeds: [embedPRIMARY], ephemeral: true })
             db.all(`SELECT * FROM ${id}`, async (err, row) => {
 
-              const buttons = new Discord.MessageActionRow()
+              const buttons = new MessageActionRow()
                 .addComponents(
-                  new Discord.MessageButton()
+                  new MessageButton()
                     .setCustomId(idVerif.text)
                     .setLabel('Participer au giveaway')
                     .setStyle('PRIMARY'),
 
-                  new Discord.MessageButton()
+                  new MessageButton()
                     .setCustomId("rien")
                     .setLabel('Participants: ' + row.length)
                     .setStyle('SECONDARY')
@@ -197,7 +195,7 @@ module.exports = {
             })
 
           } else {
-            const embedAlready = new Discord.MessageEmbed()
+            const embedAlready = new MessageEmbed()
               .setDescription("Vous êtes déjà enregistré au giveaway !")
               .setColor(config.embedColor)
 

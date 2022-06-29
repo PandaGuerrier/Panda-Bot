@@ -2,7 +2,6 @@ const fs = require('fs')
 require('dotenv').config()
 const config = require("../config/config.json")
 
-
 module.exports = (client) => {
 const commands = []
 

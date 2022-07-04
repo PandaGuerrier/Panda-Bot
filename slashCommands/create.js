@@ -62,7 +62,7 @@ module.exports = {
                     })
                     .setFooter("id: " + id)
                     .setColor(config.embedColor)
-                    .setThumbnail("https://cdn.discordapp.com/attachments/954766155321602108/960579280516038696/Icone_Tenshi.png")
+                    .setThumbnail(interaction.guild.iconURL())
 
 
                 const messageSend = await Channel.send({

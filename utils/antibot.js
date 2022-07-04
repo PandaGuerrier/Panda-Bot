@@ -6,16 +6,16 @@ class AntiBot {
     }
 
     add() {
-        db.get(`SELECT * FROM bots WHERE id = ${member.id}`, (err, row) => {
+        db.get(`SELECT * FROM bots WHERE id = ${this.bot.id}`, (err, row) => {
             if (!row) {
-              db.run(`INSERT INTO bots (pseudo, id) VALUES ('${removeEmojis(member.user.tag)}', '${member.id}')`)
+              db.run(`INSERT INTO bots (pseudo, id) VALUES ('${removeEmojis(this.bot.user.tag)}', '${this.bot.id}')`)
 
-              member.kick({ reason: "BOT" })
+              this.bot.kick({ reason: "BOT" })
 
             } else {
 
-              db.run(`UPDATE bots SET pseudo='${removeEmojis(member.user.tag)}' WHERE id='${member.id}'`)
-              member.kick({ reason: "BOT" })
+              db.run(`UPDATE bots SET pseudo='${removeEmojis(this.bot.user.tag)}' WHERE id='${this.bot.id}'`)
+              this.bot.kick({ reason: "BOT" })
 
             }
           })

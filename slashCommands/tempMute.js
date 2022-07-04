@@ -51,7 +51,7 @@ module.exports = {
 
     function tempsRestant() {
       day = d * 86400
-      heure = h * 600
+      heure = h * 3600
       minutes = m * 60
 
       return Math.round(+new Date() / 1000) + day + heure + minutes

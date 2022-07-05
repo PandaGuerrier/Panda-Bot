@@ -26,7 +26,6 @@ module.exports = {
                 interaction.reply({ embeds: [embed] })
             })
 
-
         }
         else {
             return

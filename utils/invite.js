@@ -1,65 +1,90 @@
-const { getDB } = require("./database.js")
 const { removeEmojis } = require("../utils/functions.js")
 
 class Invite {
-  constructor(inviter, invitee, code) {
+  constructor(member, inviter, code) {
+    this.member = member
     this.inviter = inviter
-    this.invitee = invitee
     this.code = code
   }
 
-  welcome() {
-    getDB().get(`SELECT * FROM inviter WHERE id = ${this.inviter.id}`, (err, dataInviter) => {
-      if (!dataInviter) {
-        getDB().run(`INSERT INTO inviter (pseudo, id, numero, partie, normal, bonus) VALUES ('${removeEmojis(this.inviter.tag)}', '${this.inviter.id}', '1', '0', '1', '0')`)
-      } else {
-        getDB().run(`UPDATE inviter SET numero='${dataInviter.numero + 1}', normal='${dataInviter.normal + 1}' WHERE id = ${this.inviter.id}`)
-      }
-    })
-    getDB().get(`SELECT * FROM users WHERE id = ${this.invitee.user.id}`, (err, dataUser) => {
-      if (!dataUser) {
-        getDB().run(`INSERT INTO users (inviterName, inviterId, id, code) VALUES ('${removeEmojis(this.inviter.tag)}', '${this.inviter.id}', '${this.invitee.user.id}', '${this.code}')`)
-      } else {
-        getDB().run(`UPDATE users SET inviterName='${removeEmojis(this.inviter.tag)}', inviterId='${this.inviter.id}' WHERE id = ${this.invitee.user.id}`)
-      }
-    })
+  async welcome() {
+    const inviterDB = await this.member.client.db.models.Inviter.findOne({ where: { id: this.inviter.id } })
+
+    const inviteeDB = await this.member.client.db.models.Users.findOne({ where: { id: this.member.id } })
+
+    if (!inviterDB) {
+      await this.member.client.db.models.Inviter.create({
+        id: this.inviter.id,
+        pseudo: removeEmojis(this.inviter.tag),
+        numero: 1,
+        partie: 0,
+        normal: 1,
+        bonus: 0
+      })
+    } else {
+      await this.member.client.db.models.Inviter.update({
+        numero: inviterDB.numero + 1,
+        normal: inviterDB.normal + 1
+      }, { where: { id: this.inviter.id } })
+    }
+
+    if (!inviteeDB) {
+      await this.member.client.db.models.Users.create({
+        id: this.member.id,
+        code: this.code,
+        inviterName: removeEmojis(this.inviter.tag),
+        inviterId: this.inviter.id
+      })
+    } else {
+      await this.member.client.db.models.Users.update({
+        code: this.code,
+        inviterName: removeEmojis(this.inviter.tag),
+        inviterId: this.inviter.id
+      }, { where: { id: this.member.id } })
+    }
   }
 
-  goodBye(member) {
-    getDB().get(`SELECT * FROM users WHERE id='${member.user.id}'`, (err, dataUser) => {
+  async goodBye() {
+    const inviteeDB = await this.member.client.db.models.Users.findOne({ where: { id: this.member.id } })
 
-      if (!dataUser) {
+    if (!inviteeDB) {
+      return
+    } else {
+
+      const inviterDB = await this.member.client.db.models.Inviter.findOne({ where: { id: inviteeDB.inviterId } })
+
+      if (!inviterDB) {
         return
       } else {
-
-        const dataInviter = getDB().get(`SELECT * FROM inviter WHERE id='${dataUser.inviterId}'`)
-
-        if (!dataInviter) {
-          getDB().run(`INSERT INTO inviter ('pseudo', 'id,' 'numero', 'partie', 'normal', 'bonus') VALUES ('${removeEmojis(dataInviter.inviterName)}', '${dataInviter.inviterId}', '0', '1', '1', '0')`)
-        } else {
-          getDB().run(`UPDATE inviter SET partie='${dataInviter.partie + 1}', numero='${dataInviter.numero - 1}' WHERE id='${dataInviter.inviterId}'`)
-
-          getDB().run(`DELETE FROM users WHERE id='${member.user.id}'`)
-        }
+        await this.member.client.db.models.Inviter.update({
+          numero: inviterDB.numero - 1,
+          partie: inviterDB.partie + 1,
+        }, { where: { id: inviteeDB.inviterId } })
+        this.member.client.db.models.Users.destroy({ where: { id: this.member.id } })
       }
-    })
+    }
   }
 
   recharge(invite) {
     invite.client.guilds.cache.forEach(guild => {
       guild.invites.fetch()
-          .then(invites => {
+        .then(invites => {
 
-              const codeUses = new Map()
-              invites.each(inv => codeUses.set(inv.code, inv.uses))
+          const codeUses = new Map()
+          invites.each(inv => codeUses.set(inv.code, inv.uses))
 
-              invite.client.invites.set(guild.id, codeUses)
-          })
-          .catch(err => {
-              console.log(err)
-          })
-  })
+          invite.client.invites.set(guild.id, codeUses)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    })
   }
 }
 
 module.exports = Invite
+
+// https://discord.gg/AXY3bydk
+
+// join good
+// goodbye no

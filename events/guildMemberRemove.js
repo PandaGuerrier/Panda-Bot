@@ -5,7 +5,7 @@ module.exports = {
     async execute(member) {
         if (member.user.bot) return
 
-        new Invite().goodBye(member)
+        new Invite(member).goodBye()
         const cachedInvites = member.client.invites.get(member.guild.id)
         const newInvites = await member.guild.invites.fetch()
 

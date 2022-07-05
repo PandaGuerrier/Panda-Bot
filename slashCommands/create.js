@@ -44,7 +44,7 @@ module.exports = {
                 const buttons = new MessageActionRow()
                     .addComponents(
                         new MessageButton()
-                            .setCustomId(id)
+                            .setCustomId("giveaway:" + id)
                             .setLabel('Participer au giveaway')
                             .setStyle('PRIMARY'),
                     )
@@ -60,7 +60,6 @@ module.exports = {
                         value: `<t:${ts()}:R>`,
                         inline: true
                     })
-                    .setFooter("id: " + id)
                     .setColor(config.embedColor)
                     .setThumbnail(interaction.guild.iconURL())
 
@@ -100,7 +99,7 @@ module.exports = {
                                     })
                                     .setColor(config.embedColor)
                                     .setFooter("id: " + id)
-                                    .setThumbnail("https://cdn.discordapp.com/attachments/954766155321602108/960579280516038696/Icone_Tenshi.png")
+                                    .setThumbnail("interaction.guild.iconURL()")
 
 
                                 const buttons = new MessageActionRow()
@@ -136,7 +135,7 @@ module.exports = {
                                 })
                                 .setColor(config.embedColor)
                                 .setFooter("id: " + id)
-                                .setThumbnail("https://cdn.discordapp.com/attachments/954766155321602108/960579280516038696/Icone_Tenshi.png")
+                                .setThumbnail("interaction.guild.iconURL()")
                             let buttons;
                             db.all(`SELECT * FROM ${id}`, async (err, row) => {
 

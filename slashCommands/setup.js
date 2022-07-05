@@ -56,7 +56,6 @@ module.exports = {
       const emb = new MessageEmbed()
         .setDescription(`Pour éviter toutes attaques de bots, nous avons mis en place un système **ANTI-BOT**.\n\nLa seule chose que vous avez à faire c'est de cliquer sur le bouton ci dessous.\n\n**Bon jeux sur Tenshi.**`)
         .setColor(config.embedColor)
-        .setImage("https://cdn.discordapp.com/attachments/959519366892908544/960288664976523364/logo_tenshi2.png")
 
       interaction.channel.send({ embeds: [emb], components: [row] })
       interaction.reply({ content: "C'est bon bg !", ephemeral: true })

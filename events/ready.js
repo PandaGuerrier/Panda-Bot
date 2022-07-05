@@ -1,12 +1,10 @@
 const config = require("../config/config.json")
-const { registerAllDB, getDB } = require("../utils/database")
 
 module.exports = {
   name: 'ready',
   async execute(client) {
 
     console.log("Connect\u00e9 ❤️")
-    registerAllDB()
       client.guilds.cache.forEach(guild => {
         guild.invites.fetch()
           .then(invites => {

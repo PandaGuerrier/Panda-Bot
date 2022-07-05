@@ -20,7 +20,7 @@ module.exports = {
             .setThumbnail(member.displayAvatarURL())
           await channelBienvenue.send({ embeds: [bienvenueEmbed] })
         } else {
-          new Invite(invite.inviter, member, invite.code).welcome()
+          new Invite(member, invite.inviter, invite.code).welcome()
 
           const bienvenueEmbed = new MessageEmbed()
             .setTitle("Bienvenue sur " + config.informations.serverName + " !")

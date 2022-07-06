@@ -114,7 +114,7 @@ module.exports = {
                 .setStyle('PRIMARY'),
               new MessageButton()
                 .setCustomId("rien")
-                .setLabel('Participants: ' + parseInt(isGiveawayExist.dataValues.users.length) + 1)
+                .setLabel(`Participants: ${parseInt(isGiveawayExist.dataValues.users.length) + 1}`)
                 .setStyle('SECONDARY')
                 .setDisabled(true),
             )

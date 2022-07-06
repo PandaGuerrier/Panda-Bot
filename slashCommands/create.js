@@ -50,7 +50,6 @@ module.exports = {
             .setColor(config.embedColor)
             .setThumbnail(interaction.guild.iconURL())
 
-
         const messageSend = await channel.send({ embeds: [embed], components: [buttons] })
 
         await interaction.client.db.models.Giveaway.create({
@@ -89,15 +88,19 @@ module.exports = {
 
                 return await messageSend.edit({ embeds: [embedFinish], components: [buttons] }) && channel.send({ content: "Pas assez de participants pour le tirage au sort !" })
             }
+            const winners = []
 
-            const winnerGiveaway = []
-
+            for (let i = 0; i < giveaway.dataValues.gagnants; i++) {
+                const winner = giveaway.dataValues.users.sort(() => 0.5 - Math.random()).slice(0, 1);
+                winners.push(winner[0])
+                giveaway.dataValues.users.splice(giveaway.dataValues.users.indexOf(winner[0]), 1)
+            }
             const embedFinish = new MessageEmbed()
                 .setTitle(":tada: GIVEAWAY FINI :tada:")
                 .setDescription("Le Giveaway est fini !")
                 .addFields(
                     { name: "Lot :", value: lot, inline: true },
-                    { name: "Gagnant(s)", value: `${giveaway.dataValues.users.map(e => `<@${e.id}> (${e.username})`).join("\n")}`, inline: true }
+                    { name: "Gagnant(s)", value: `${giveaway.dataValues.users.map(e => `<@${e}>`).join(", ")}`, inline: true }
                 )
                 .setColor(config.embedColor)
                 .setThumbnail(interaction.guild.iconURL())
@@ -106,13 +109,14 @@ module.exports = {
                 .addComponents(
                     new MessageButton()
                         .setCustomId("rien")
-                        .setLabel('Participants: ' + row.length)
+                        .setLabel('Participants: ' + giveaway.dataValues.users.length)
                         .setStyle('SECONDARY')
                         .setDisabled(true),
                 )
 
             await messageSend.edit({ embeds: [embedFinish], components: [buttons] })
-            await channel.send({ content: `${row.map(e => "<@" + e.id + ">").join(", ")} ${giveaway.dataValues.users.length > 1 ? "ont" : "a"} gagné le giveaway !` })
+            await channel.send({ content: `${winners.map(e => "<@" + e + ">").join(", ")} ${giveaway.dataValues.users.length > 1 ? "ont" : "a"} gagné le giveaway !` })
         }, ms(days + "d") + ms(hours + "h") + ms(minutes + "m"))
     },
 }
+

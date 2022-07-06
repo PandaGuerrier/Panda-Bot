@@ -6,11 +6,10 @@ class Invite {
     this.inviter = inviter
     this.code = code
   }
-
   async welcome() {
     const inviterDB = await this.member.client.db.models.Inviter.findOne({ where: { id: this.inviter.id } })
 
-    const inviteeDB = await this.member.client.db.models.Users.findOne({ where: { id: this.member.id } })
+    const invitedDB = await this.member.client.db.models.Users.findOne({ where: { id: this.member.id } })
 
     if (!inviterDB) {
       await this.member.client.db.models.Inviter.create({
@@ -28,7 +27,7 @@ class Invite {
       }, { where: { id: this.inviter.id } })
     }
 
-    if (!inviteeDB) {
+    if (!invitedDB) {
       await this.member.client.db.models.Users.create({
         id: this.member.id,
         code: this.code,
@@ -45,14 +44,14 @@ class Invite {
   }
 
   async goodBye() {
-    const inviteeDB = await this.member.client.db.models.Users.findOne({ where: { id: this.member.id } })
+    const invitedDB = await this.member.client.db.models.Users.findOne({ where: { id: this.member.id } })
 
-    if (!inviteeDB) {
+    if (!invitedDB) {
       return
     } else {
 
-      const inviterDB = await this.member.client.db.models.Inviter.findOne({ where: { id: inviteeDB.dataValues.inviterId } })
-      console.log(inviteeDB)
+      const inviterDB = await this.member.client.db.models.Inviter.findOne({ where: { id: invitedDB.dataValues.inviterId } })
+      console.log(invitedDB)
       console.log(inviterDB)
       if (!inviterDB) {
         return
@@ -60,26 +59,20 @@ class Invite {
         await this.member.client.db.models.Inviter.update({
           numero: inviterDB.dataValues.numero - 1,
           partie: inviterDB.dataValues.partie + 1,
-        }, { where: { id: inviteeDB.dataValues.inviterId } })
+        }, { where: { id: invitedDB.dataValues.inviterId } })
       }
-      
+
     }
   }
 
-  recharge(invite) {
-    invite.client.guilds.cache.forEach(guild => {
-      guild.invites.fetch()
-        .then(invites => {
+  async refresh(invite) {
+    const guild = invite.client.guilds.cache.get(config.informations.serverId)
+    const invites = await guild.invites.fetch()
 
-          const codeUses = new Map()
-          invites.each(inv => codeUses.set(inv.code, inv.uses))
+    const codeUses = new Map()
+    invites.each(inv => codeUses.set(inv.code, inv.uses))
 
-          invite.client.invites.set(guild.id, codeUses)
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    })
+    invite.client.invites.set(guild.id, codeUses)
   }
 }
 
@@ -87,7 +80,3 @@ module.exports = Invite
 
 // https://discord.gg/AXY3bydk
 
-// join good
-// goodbye no
-
-//      this.member.client.db.models.Users.destroy({ where: { id: this.member.id } })

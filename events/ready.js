@@ -1,23 +1,19 @@
 const config = require("../config/config.json")
+const Invite = require("../utils/invite")
 
 module.exports = {
   name: 'ready',
   async execute(client) {
 
     console.log("Connect\u00e9 ❤️")
-    client.guilds.cache.forEach(guild => {
-      guild.invites.fetch()
-        .then(invites => {
 
-          const codeUses = new Map()
-          invites.each(inv => codeUses.set(inv.code, inv.uses))
+    const guild = client.guilds.cache.get(config.informations.serverId)
+    const invites = await guild.invites.fetch()
 
-          client.invites.set(guild.id, codeUses)
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    })
+    const codeUses = new Map()
+    invites.each(inv => codeUses.set(inv.code, inv.uses))
+
+    client.invites.set(guild.id, codeUses)
 
     client.user.setActivity(`${config.informations.status}`, {
       type: "PLAYING",

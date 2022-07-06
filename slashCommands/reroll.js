@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
 const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js")
-const db = require("../utils/database").getDB()
+const config = require("../config/config.json")
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -12,56 +12,69 @@ module.exports = {
 
         const idGiveaway = interaction.options.getString("id")
 
-                db.get(`SELECT * FROM GiveAway WHERE id = '${idGiveaway}'`, async (err, rowa) => {
-                    const Channel = interaction.guild.channels.cache.get(rowa.channelId)
+        const giveaway = await interaction.client.db.models.Giveaway.findOne({ where: { id: idGiveaway } })
 
-                    if (!rowa) return interaction.reply({
-                        content: "L'id que vous avez fourni n'existe pas !",
-                        ephemeral: true
-                    })
+        const channel = interaction.guild.channels.cache.get(giveaway.dataValues.channelId)
 
-                    const messageGiveaway = await interaction.channel.messages.fetch(rowa.idMsg)
+        if (!giveaway) return await interaction.reply({ content: "Ce giveaway n'existe pas !", ephemeral: true })
+        if (!channel) return await interaction.reply({ content: "Ce channel n'existe pas !", ephemeral: true })
 
-                    db.all(`SELECT * FROM ${idGiveaway} ORDER BY RANDOM() LIMIT ${rowa.gagnants}`, (err, row) => {
+        const messageSend = await channel.messages.fetch(giveaway.dataValues.messageId)
 
-                        if (!row) return Channel.send({content: "Pas assez de participants pour le tirage au sort !", ephemeral: true})
+        if (giveaway.dataValues.users.length <= giveaway.dataValues.gagnants) {
 
-                        if (row.gagnants >= row.length) return interaction.reply({content: "Pas assez de participants pour le tirage au sort !", ephemeral: true})
 
-                            buttons = new MessageActionRow()
-                                .addComponents(
-                                    new MessageButton()
-                                        .setCustomId("rien")
-                                        .setLabel('Participants: ' + row.length)
-                                        .setStyle('SECONDARY')
-                                        .setDisabled(true),
-                                )
+            const embedFinish = new MessageEmbed()
+                .setTitle(":tada: GIVEAWAY FINI :tada:")
+                .setDescription("Le Giveaway est fini !")
+                .addFields(
+                    { name: "Lot :", value: giveaway.dataValues.lot, inline: true },
+                    { name: "Gagnant(s)", value: `Pas assez de participants :(`, inline: true }
+                )
+                .setColor(config.embedColor)
+                .setThumbnail(interaction.guild.iconURL())
 
-                        const embedFinish = new MessageEmbed()
-                            .setTitle(":tada: GIVEAWAY FINI :tada:")
-                            .setDescription("Le Giveaway est fini !")
-                            .addFields({
-                                name: "Lot :",
-                                value: `${String(rowa.lot)}`,
-                                inline: true
-                            }, {
-                                name: "Gagnant(s)",
-                                value: `${row.map(e => "<@" + e.id + ">").join("\n")}`,
-                                inline: true
-                            })
-                            .setColor(config.embedColor)
-                            .setThumbnail("interaction.guild.iconURL()")
+            const buttons = new MessageActionRow()
+                .addComponents(
+                    new MessageButton()
+                        .setCustomId("rien")
+                        .setLabel('Participants: ' + giveaway.dataValues.users.length)
+                        .setStyle('SECONDARY')
+                        .setDisabled(true),
+                )
 
-                        messageGiveaway.edit({
-                            embeds: [embedFinish],
-                            components: [buttons]
-                        })
-                        Channel.send({
-                            content: `${row.map(e => "<@" + e.id + ">").join(", ")} ${row.length > 1 ? "ont" : "a"} gagné le giveaway !`
-                        })
+            return await messageSend.edit({ embeds: [embedFinish], components: [buttons] }) && await interaction.reply({ content: "Pas assez de participants pour le tirage au sort !" })
+        }
 
-                        interaction.reply({ content: "Le Giveaway a bien été reroll !", ephemeral: true })
-                    })
-                })
+        const winners = []
+
+        for (let i = 0; i < giveaway.dataValues.gagnants; i++) {
+            const winner = giveaway.dataValues.users.sort(() => 0.5 - Math.random()).slice(0, 1);
+            winners.push(winner[0])
+            giveaway.dataValues.users.splice(giveaway.dataValues.users.indexOf(winner[0]), 1)
+        }
+
+        const embedFinish = new MessageEmbed()
+            .setTitle(":tada: GIVEAWAY FINI :tada:")
+            .setDescription("Le Giveaway est fini !")
+            .addFields(
+                { name: "Lot :", value: giveaway.dataValues.lot, inline: true },
+                { name: "Gagnant(s)", value: `${winners.map(e => `<@${e}>`).join(", ")}`, inline: true }
+            )
+            .setColor(config.embedColor)
+            .setThumbnail(interaction.guild.iconURL())
+
+        const buttons = new MessageActionRow()
+            .addComponents(
+                new MessageButton()
+                    .setCustomId("rien")
+                    .setLabel('Participants: ' + giveaway.dataValues.users.length)
+                    .setStyle('SECONDARY')
+                    .setDisabled(true),
+            )
+
+        await messageSend.edit({ embeds: [embedFinish], components: [buttons] })
+        await channel.send({ content: `${winners.map(e => "<@" + e + ">").join(", ")} ${winners.length > 1 ? "ont" : "a"} gagné le giveaway !` })
+        await interaction.reply({ content: "Tirage refait !", ephemeral: true })
     },
 }

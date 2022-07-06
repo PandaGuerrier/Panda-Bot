@@ -11,8 +11,8 @@ module.exports = {
     try {
       const cachedInvites = member.client.invites.get(member.guild.id)
       const invitesList = await member.guild.invites.fetch()
-      try {
         const invite = invitesList.find(inv => cachedInvites.get(inv.code) < inv.uses)
+        
         if (!invite) {
           const bienvenueEmbed = new MessageEmbed()
             .setTitle("Bienvenue sur " + config.informations.serverName + " !")
@@ -28,11 +28,10 @@ module.exports = {
             .setThumbnail(member.displayAvatarURL())
           await channelBienvenue.send({ embeds: [bienvenueEmbed] })
         }
-      } catch (err) {
-        console.error(err)
-      }
+
       invitesList.each(inv => cachedInvites.set(inv.code, inv.uses))
       member.client.invites.set(member.guild.id, cachedInvites)
+
       setTimeout(async () => {
         const roleVerification = member.guild.roles.cache.get(config.roles.bienvenue);
         if (!member.roles.cache.some(r => r.name.toLowerCase() === roleVerification.name.toLowerCase())) {

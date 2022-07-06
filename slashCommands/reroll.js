@@ -1,6 +1,4 @@
-const {
-    SlashCommandBuilder
-} = require('@discordjs/builders')
+const { SlashCommandBuilder } = require('@discordjs/builders')
 const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js")
 const db = require("../utils/database").getDB()
 
@@ -56,12 +54,6 @@ module.exports = {
                         db.all(`SELECT * FROM ${idGiveaway}`, async (err, row) => {
                             buttons = new MessageActionRow()
                                 .addComponents(
-                                    new MessageButton()
-                                        .setCustomId("rien")
-                                        .setLabel('Participer au giveaway')
-                                        .setStyle('PRIMARY')
-                                        .setDisabled(true),
-
                                     new MessageButton()
                                         .setCustomId("rien")
                                         .setLabel('Participants: ' + row.length)

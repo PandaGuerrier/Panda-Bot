@@ -28,39 +28,66 @@ module.exports = {
     const partie = interaction.options.getInteger("partie")
     const bonus = interaction.options.getInteger("bonus")
 
-    db.get(`SELECT * FROM inviter WHERE id = ${membre.id}`, (err, row) => {
-      if (!row) {
-        db.run(`INSERT INTO inviter (pseudo, id, numero, partie, normal, bonus) VALUES ('${membre.tag}', '${membre.id}', '${actuelle}', ${partie}, ${normale}, ${bonus})`)
-
-        const embedRien = new MessageEmbed()
-          .setDescription(`${membre} (${membre.username}) à maintenant ${actuelle} invitations (${normale} normales, ${partie} parties, ${bonus} bonus)`)
-          .setColor(config.embedColor)
-
-        interaction.reply({ embeds: [embedRien], ephemeral: true })
-
-      } else {
-
-        if (esChoix == 'edit') {
-          db.run(`UPDATE inviter SET numero='${row.numero + actuelle}', normal='${row.normal + normale}', partie='${row.partie + partie}', bonus='${row.bonus + bonus}' WHERE id = ${membre.id}`)
-
-          const embedEdit = new MessageEmbed()
-            .setDescription(`${membre} (${membre.username}) à maintenant ${actuelle + row.numero} invitations (${normale + row.normal} normales, ${partie + row.partie} parties, ${bonus + row.bonus} bonus)`)
-            .setColor(config.embedColor)
-
-          interaction.reply({ embeds: [embedEdit], ephemeral: true })
-
-        } else if (esChoix == 'set') {
-          db.run(`UPDATE inviter SET numero='${actuelle}', normal='${normale}', partie='${partie}', bonus='${bonus}' WHERE id = ${membre.id}`)
-
-          const embedSet = new MessageEmbed()
-            .setDescription(`${membre} (${membre.username}) à maintenant ${actuelle} invitations (${normale} normales, ${partie} parties, ${bonus} bonus)`)
-            .setColor(config.embedColor)
-
-          interaction.reply({ embeds: [embedSet], ephemeral: true })
-
-        }
+    const invite = await interaction.client.db.models.Invite.findOne({
+      where: {
+        id: membre.id
       }
     })
-    db.close()
+
+    if (!invite) {
+      await interaction.client.db.models.Invite.create({
+        id: membre.id,
+        actuelle: actuelle,
+        normale: normale,
+        partie: partie,
+        bonus: bonus
+      })
+
+      const embedRien = new MessageEmbed()
+        .setDescription(`${membre} (${membre.username}) a maintenant ${actuelle} invitations (${normale} normales, ${partie} parties, ${bonus} bonus)`)
+        .setColor(config.embedColor)
+
+      interaction.reply({ embeds: [embedRien], ephemeral: true })
+
+    } else {
+
+      if (esChoix == 'edit') {
+        await interaction.client.db.models.Invite.update({
+          actuelle: actuelle + invite.dataValues.actuelle,
+          normale: normale + invite.dataValues.normale,
+          partie: partie + invite.dataValues.partie,
+          bonus: bonus + invite.dataValues.bonus
+        }, {
+          where: {
+            id: membre.id
+          }
+        })
+
+        const embedEdit = new MessageEmbed()
+          .setDescription(`${membre} (${membre.username}) a maintenant ${actuelle + invite.dataValues.numero} invitation(s) (${normale + invite.dataValues.normal} normale(s), ${partie + invite.dataValues.partie} partie(s), ${bonus + invite.dataValues.bonus} bonu(s))`)
+          .setColor(config.embedColor)
+
+        interaction.reply({ embeds: [embedEdit], ephemeral: true })
+
+      } else if (esChoix == 'set') {
+
+        await interaction.client.db.models.Invite.update({
+          actuelle: actuelle,
+          normale: normale,
+          partie: partie,
+          bonus: bonus
+        }, {
+          where: {
+            id: membre.id
+          }
+        })
+
+        const embedSet = new MessageEmbed()
+          .setDescription(`${membre} (${membre.username}) a maintenant ${actuelle} invitation(s) (${normale} normale(s), ${partie} partie(s), ${bonus} bonu(s))`)
+          .setColor(config.embedColor)
+
+        interaction.reply({ embeds: [embedSet], ephemeral: true })
+      }
+    }
   },
 }

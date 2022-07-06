@@ -12,7 +12,7 @@ module.exports = {
 
     const mem = interaction.options.getMember("ping")
 
-    if (interaction.member.user.id == mem.user.id) return interaction.reply({ content: `Tu ne peux pas te unmute toi m\u00eame !`, ephemeral: true })
+    if (interaction.member.user.id == mem.user.id) return await interaction.reply({ content: `Tu ne peux pas te unmute toi m\u00eame !`, ephemeral: true })
 
     const emb = new MessageEmbed()
       .setTitle("Vous avez \u00e9t\u00e9 unmute de " + config.informations.serverName + " !")
@@ -25,14 +25,14 @@ module.exports = {
       .setDescription(`Vous avez bien unmute : ${mem}`)
       .setColor(config.embedColor)
 
-    mem.send({ embeds: [emb] }).catch()
-    interaction.reply({ embeds: [emb1], ephemeral: true })
+    await mem.send({ embeds: [emb] }).catch()
+    await interaction.reply({ embeds: [emb1], ephemeral: true })
 
     const log = new MessageEmbed()
       .setDescription(interaction.member.user.tag + " a unmute " + mem.user.tag)
       .setColor("#FF0000")
 
-    interaction.guild.channels.cache.get(config.channels.log).send({ embeds: [log] })
-    mem.timeout(null, "unmuted")
+    await interaction.guild.channels.cache.get(config.channels.log).send({ embeds: [log] })
+    await mem.timeout(null, "unmuted")
   }
 }

@@ -11,16 +11,20 @@ module.exports = {
 
         const id = interaction.options.getString("id")
 
-        db.get(`SELECT name FROM sqlite_master WHERE type='table' AND name='${id}'`, (err, row) => {
-
-            if (!row) return interaction.reply({ content: "L'id de ce giveaway n'existe pas !", ephemeral: true })
-            else {
-                db.run(`DROP TABLE ${id}`)
-                db.run(`DELETE FROM GiveAway WHERE id='${id}'`)
-                interaction.reply({ content: "Le giveaway a bien été supprimé !", ephemeral: true })
+        const giveaway = await interaction.client.db.models.Giveaway.findOne({
+            where: {
+                id: id
             }
-
-
         })
+
+        if (!giveaway) return interaction.reply({ content: "L'id de ce giveaway n'existe pas !", ephemeral: true })
+        else {
+            interaction.client.db.models.Giveaway.destroy({
+                where: {
+                    id: id
+                }
+            })
+            interaction.reply({ content: "Le giveaway a bien été supprimé !", ephemeral: true })
+        }
     },
 }

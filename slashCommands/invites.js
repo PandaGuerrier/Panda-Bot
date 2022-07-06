@@ -16,26 +16,24 @@ module.exports = {
 
         if (!membre) membre = interaction.member.user
 
-        db.get(`SELECT * FROM inviter WHERE id = '${membre.id}'`, (err, row) => {
-            if (err) {
-                console.error(err.message)
-            }
-
-            const noInviteEmbed = new MessageEmbed()
-                .setDescription(`${membre.id === interaction.member.user.id ? "Vous n'avez" : `${membre} n'à`} aucune invitation enregistrée !`)
-                .setColor(config.embedColor)
-
-            if (!row) return interaction.reply({ embeds: [noInviteEmbed], ephemeral: true })
-
-            else {
-                const yesInviteEmbed = new MessageEmbed()
-                    .setDescription(`${membre.id === interaction.member.user.id ? "Vous avez" : `${membre} à`} ${row.numero} invitation(s) (${row.normal} normale(s), ${row.partie} partie(s), ${row.bonus} bonus)`)
-                    .setColor(config.embedColor)
-
-                interaction.reply({ embeds: [yesInviteEmbed], ephemeral: true })
+        const invite = await interaction.client.db.models.Invite.findOne({
+            where: {
+                id: membre.id
             }
         })
 
-        db.close()
+        const noInviteEmbed = new MessageEmbed()
+            .setDescription(`${membre.id === interaction.member.user.id ? "Vous n'avez" : `${membre} n'à`} aucune invitation enregistrée !`)
+            .setColor(config.embedColor)
+
+        if (!invite) return interaction.reply({ embeds: [noInviteEmbed], ephemeral: true })
+
+        else {
+            const yesInviteEmbed = new MessageEmbed()
+                .setDescription(`${membre.id === interaction.member.user.id ? "Vous avez" : `${membre} à`} ${invite.dataValues.numero} invitation(s) (${invite.dataValues.normal} normale(s), ${invite.dataValues.partie} partie(s), ${invite.dataValues.bonus} bonus)`)
+                .setColor(config.embedColor)
+
+            interaction.reply({ embeds: [yesInviteEmbed], ephemeral: true })
+        }
     },
 }

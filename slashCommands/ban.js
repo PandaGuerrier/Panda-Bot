@@ -10,7 +10,6 @@ module.exports = {
     .addStringOption(option => option.setName('raison').setDescription('La raison du ban').setRequired(true)),
 
   async execute(interaction) {
-
     const mem = interaction.options.getUser("membre")
     const EmbedDescription = interaction.options.getString("raison")
 

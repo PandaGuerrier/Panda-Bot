@@ -21,9 +21,9 @@ module.exports = {
     const h = interaction.options.getInteger("heures")
     const m = interaction.options.getInteger("minutes")
 
-    if (interaction.member.user.id == member.user.id) return interaction.reply({ content: `Tu ne peux pas te mute toi m\u00eame !`, ephemeral: true })
+    if (interaction.member.user.id == member.user.id) return await interaction.reply({ content: `Tu ne peux pas te mute toi m\u00eame !`, ephemeral: true })
 
-    if (member.permissions.has("ADMINISTRATOR")) return interaction.reply({ content: "Je ne peux pas mute cette personne :/ !", ephemeral: true })
+    if (member.permissions.has("ADMINISTRATOR")) return await interaction.reply({ content: "Je ne peux pas mute cette personne :/ !", ephemeral: true })
 
     const embedSendMuted = new MessageEmbed()
       .setDescription("Vous avez \u00e9t\u00e9 mute de " + config.informations.serverName + " !")
@@ -40,14 +40,14 @@ module.exports = {
         { name: "Raison :", value: String(reason) }
       ).setColor(config.embedColor)
 
-    member.send({ embeds: [embedSendMuted] }).catch()
-    interaction.reply({ embeds: [embedSenStaff], ephemeral: true })
+    await member.send({ embeds: [embedSendMuted] }).catch()
+    await interaction.reply({ embeds: [embedSenStaff], ephemeral: true })
 
     const log = new MessageEmbed()
       .setDescription(interaction.member.user.tag + " a mute " + member.user.tag + " pour la raison : " + String(reason)).setColor(config.embedColor)
 
-    interaction.guild.channels.cache.get(config.channels.log).send({ embeds: [log] })
+    await interaction.guild.channels.cache.get(config.channels.log).send({ embeds: [log] })
 
-    member.timeout(ms(d + "d") + ms(h + "h") + ms(m + "m"), reason)
+    await member.timeout(ms(d + "d") + ms(h + "h") + ms(m + "m"), reason)
   }
 }

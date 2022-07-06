@@ -14,7 +14,7 @@ module.exports = {
     const mem = interaction.options.getUser("membre")
     const EmbedDescription = interaction.options.getString("raison")
 
-    if (interaction.member.user.id == mem) return interaction.reply({ content: `Tu ne peux pas te kick toi m\u00eame !`, ephemeral: true })
+    if (interaction.member.user.id == mem) return await interaction.reply({ content: `Tu ne peux pas te kick toi m\u00eame !`, ephemeral: true })
 
     const emb = new MessageEmbed()
       .setTitle("Vous avez \u00e9t\u00e9 kick de " + config.informations.serverName + " !")
@@ -33,7 +33,7 @@ module.exports = {
       )
       .setColor(config.embedColor)
 
-    mem.send({ embeds: [emb] }).catch((e) => {
+    await mem.send({ embeds: [emb] }).catch((e) => {
 
     })
     interaction.reply({ embeds: [emb1], ephemeral: true })
@@ -42,7 +42,7 @@ module.exports = {
       .setDescription(interaction.member.user.tag + " a kick " + mem.tag + " pour la raison : " + String(EmbedDescription))
       .setColor("#FF0000")
 
-    interaction.guild.channels.cache.get(config.channels.log).send({ embeds: [log] })
-    interaction.guild.members.kick(mem.id, { reason: EmbedDescription }).catch((error) => { })
+    await interaction.guild.channels.cache.get(config.channels.log).send({ embeds: [log] })
+    await interaction.guild.members.kick(mem.id, { reason: EmbedDescription }).catch((error) => { })
   }
 }

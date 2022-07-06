@@ -41,8 +41,8 @@ module.exports = {
         .setDescription("Créez un ticket support en **sélectionnant** la catégorie correspondante à votre demande.\n\n" + config.tickets.categories.map(category => `${category.emoji} **- ${category.name}**`).join("\n"))
         .setColor(config.embedColor)
 
-      interaction.channel.send({ embeds: [emb], components: [row] })
-      interaction.reply({ content: "C'est fait !", ephemeral: true })
+      await interaction.channel.send({ embeds: [emb], components: [row] })
+      await interaction.reply({ content: "C'est fait !", ephemeral: true })
     } else if (menu === "verification") {
       const row = new MessageActionRow()
         .addComponents(
@@ -57,8 +57,8 @@ module.exports = {
         .setDescription(`Pour éviter toutes attaques de bots, nous avons mis en place un système **ANTI-BOT**.\n\nLa seule chose que vous avez à faire c'est de cliquer sur le bouton ci dessous.\n\n**Bon jeux sur Tenshi.**`)
         .setColor(config.embedColor)
 
-      interaction.channel.send({ embeds: [emb], components: [row] })
-      interaction.reply({ content: "C'est bon bg !", ephemeral: true })
+        await interaction.channel.send({ embeds: [emb], components: [row] })
+        await interaction.reply({ content: "C'est bon bg !", ephemeral: true })
     }
   },
 }

@@ -8,7 +8,7 @@ module.exports = {
 
 
     async execute(interaction) {
-        if(interaction.channel.topic === "ticket") {
+        if (interaction.channel.topic === "ticket") {
             const embed1 = new MessageEmbed()
                 .setTitle("TICKET")
                 .setDescription("Êtes vous sûr de vouloir fermer le ticket ?")
@@ -28,7 +28,7 @@ module.exports = {
                         .setStyle('DANGER'),
                 )
 
-        await interaction.reply({ embeds: [embed1], components: [sur] })
+            await interaction.reply({ embeds: [embed1], components: [sur] })
         }
     }
 }

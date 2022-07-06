@@ -10,8 +10,12 @@ module.exports = {
 
   async execute(interaction) {
 
-    db.all(`SELECT * FROM inviter ORDER BY numero DESC`, async (err, row) => {
-      if (err) throw err
+      const row = await interaction.client.db.models.Invite.findAll({
+          attributes: ['id', 'numero', 'normal', 'partie', 'bonus'],
+          order: [
+              ['numero', 'DESC']
+          ]
+      })
 
       if (row.length <= 0) return interaction.reply({ content: "Aucun classement pour le moment !", ephemeral: true })
 
@@ -272,6 +276,5 @@ module.exports = {
         }
 
       })
-    })
   }
 }

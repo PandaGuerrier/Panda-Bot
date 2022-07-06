@@ -3,7 +3,6 @@ const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js")
 const ms = require("ms")
 const config = require("../config/config.json")
 const { tempsRestant } = require("../utils/functions.js")
-const { Sequelize } = require('sequelize');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -91,7 +90,7 @@ module.exports = {
                 return await messageSend.edit({ embeds: [embedFinish], components: [buttons] }) && channel.send({ content: "Pas assez de participants pour le tirage au sort !" })
             }
 
-            const winnerGiveaway = await interaction.client.db.models.Giveaway.findAll({ order: Sequelize.literal('rand()'), limit: gagnants })
+            const winnerGiveaway = []
 
             const embedFinish = new MessageEmbed()
                 .setTitle(":tada: GIVEAWAY FINI :tada:")

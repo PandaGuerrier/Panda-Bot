@@ -8,24 +8,9 @@ module.exports = {
         .setDescription('Relancer un giveaway')
         .addStringOption(option => option.setName('id').setDescription("L'id giveaway !").setRequired(true)),
 
-
-    execute(interaction) {
+    async execute(interaction) {
 
         const idGiveaway = interaction.options.getString("id")
-
-        db.get(`SELECT name FROM sqlite_master WHERE type='table' AND name='${idGiveaway}'`, (err, row) => {
-
-            if (!row) return interaction.reply({
-                content: "L'id que vous avez fourni n'existe pas !",
-                ephemeral: true
-            })
-
-            db.get(`SELECT * FROM ${idGiveaway}`, (err, row) => {
-
-                if (!row) return interaction.reply({
-                    content: "L'id que vous avez fourni n'existe pas !",
-                    ephemeral: true
-                })
 
                 db.get(`SELECT * FROM GiveAway WHERE id = '${idGiveaway}'`, async (err, rowa) => {
                     const Channel = interaction.guild.channels.cache.get(rowa.channelId)
@@ -39,19 +24,10 @@ module.exports = {
 
                     db.all(`SELECT * FROM ${idGiveaway} ORDER BY RANDOM() LIMIT ${rowa.gagnants}`, (err, row) => {
 
-                        if (!row) return Channel.send({
-                            content: "Pas assez de participants pour le tirage au sort !",
-                            ephemeral: true
-                        })
+                        if (!row) return Channel.send({content: "Pas assez de participants pour le tirage au sort !", ephemeral: true})
 
-                        if (row.gagnants >= row.length) return interaction.reply({
-                            content: "Pas assez de participants pour le tirage au sort !",
-                            ephemeral: true
-                        })
+                        if (row.gagnants >= row.length) return interaction.reply({content: "Pas assez de participants pour le tirage au sort !", ephemeral: true})
 
-
-                        let buttons;
-                        db.all(`SELECT * FROM ${idGiveaway}`, async (err, row) => {
                             buttons = new MessageActionRow()
                                 .addComponents(
                                     new MessageButton()
@@ -60,7 +36,6 @@ module.exports = {
                                         .setStyle('SECONDARY')
                                         .setDisabled(true),
                                 )
-                        })
 
                         const embedFinish = new MessageEmbed()
                             .setTitle(":tada: GIVEAWAY FINI :tada:")
@@ -85,14 +60,8 @@ module.exports = {
                             content: `${row.map(e => "<@" + e.id + ">").join(", ")} ${row.length > 1 ? "ont" : "a"} gagné le giveaway !`
                         })
 
-
                         interaction.reply({ content: "Le Giveaway a bien été reroll !", ephemeral: true })
                     })
                 })
-
-            })
-
-
-        })
     },
 }

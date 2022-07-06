@@ -10,8 +10,7 @@ module.exports = {
 
   async execute(interaction) {
 
-      const row = await interaction.client.db.models.Invite.findAll({
-          attributes: ['id', 'numero', 'normal', 'partie', 'bonus'],
+      const row = await interaction.client.db.models.Inviter.findAll({
           order: [
               ['numero', 'DESC']
           ]

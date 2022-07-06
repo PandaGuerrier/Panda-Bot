@@ -8,7 +8,8 @@ module.exports = {
         .addUserOption(option => option.setName('mention').setDescription('Le membre a enlever').setRequired(true)),
 
     async execute(interaction) {
-        if (interaction.channel.name.startsWith("❓") || interaction.channel.name.startsWith("⛑️") || interaction.channel.name.startsWith("🤝") || interaction.channel.name.startsWith("🏁") || interaction.channel.name.startsWith("📂")) {
+
+        if (interaction.channel.topic === "ticket") {
 
             const membre = interaction.options.getUser("mention")
 

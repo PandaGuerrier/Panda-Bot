@@ -14,7 +14,7 @@ module.exports = {
     const mem = interaction.options.getUser("membre")
     const EmbedDescription = interaction.options.getString("raison")
 
-    if (interaction.member.user.id == mem) return interaction.reply({ content: `Tu ne peux pas te ban toi m\u00eame !`, ephemeral: true })
+    if (interaction.member.user.id == mem) return await interaction.reply({ content: `Tu ne peux pas te ban toi m\u00eame !`, ephemeral: true })
 
     const emb = new MessageEmbed()
       .setTitle("Vous avez \u00e9t\u00e9 banni de " + config.informations.serverName + " !")
@@ -33,16 +33,16 @@ module.exports = {
       )
       .setColor(config.embedColor)
 
-    mem.send({ embeds: [emb] }).catch((e) => {
+    await mem.send({ embeds: [emb] }).catch((e) => {
 
     })
-    interaction.reply({ embeds: [emb1], ephemeral: true })
+    await interaction.reply({ embeds: [emb1], ephemeral: true })
 
     const log = new MessageEmbed()
       .setDescription(interaction.member.user.tag + " a banni " + mem.tag + " pour la raison : " + String(EmbedDescription))
       .setColor("#FF0000")
 
-    interaction.guild.channels.cache.get(config.channels.log).send({ embeds: [log] })
-    interaction.guild.members.ban(mem.id, { reason: EmbedDescription }).catch((error) => { })
+    await interaction.guild.channels.cache.get(config.channels.log).send({ embeds: [log] })
+    await interaction.guild.members.ban(mem.id, { reason: EmbedDescription }).catch((error) => { })
   }
 }

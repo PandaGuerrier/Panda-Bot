@@ -11,13 +11,13 @@ module.exports = {
 
         let nm = interaction.options.getInteger("nombre")
 
-        if (nm < 0) return interaction.reply({ content: "Veuillez entrer un nombre sup\u00e9rieur à 0 !", ephemeral: true })
+        if (nm < 0) return await interaction.reply({ content: "Veuillez entrer un nombre sup\u00e9rieur à 0 !", ephemeral: true })
         const emb = new MessageEmbed()
             .setTitle("Succ\u00e8s !")
             .setDescription("J'ai bien supprim\u00e9 " + nm + " messages !")
             .setColor(config.embedColor)
 
-        interaction.channel.bulkDelete(nm).catch((e) => {
+        await interaction.channel.bulkDelete(nm).catch((e) => {
 
         })
             .catch((e) => {

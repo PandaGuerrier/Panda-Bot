@@ -19,37 +19,30 @@ const db = require("../utils/database").getDB()
 
         if(menu == 'remove') {
 
-        
-            db.get(`SELECT * FROM setup`, (err, row) => {
-              if (!row) {
-                db.run(`INSERT INTO setup (actif) VALUES ('${false}')`)
+          const isActif = await interaction.client.db.models.Setup.findOne({where: {actif: true}})
+                if(isActif) {
+                  await interaction.client.db.models.Setup.destroy({where: {actif: true}})
+
+                  await interaction.reply({content: "Le leaderboard est maintenant désactivé !", ephemeral: true})                  
                 } else {
-                  db.run(`UPDATE setup SET actif='${false}'`)
-                }
-        
-                interaction.reply({content: "Le leaderboard est maintenant désactivé !", ephemeral: true})
-        
-        
-              })
+                  await interaction.reply({content: "Le leaderboard automatique n'est pas activé.", ephemeral: true})
+                }        
             } else {
         
                   const embed = new MessageEmbed()
                   .setTitle("INSTALLATION...")
                   .setColor(config.embedColor)
         
-                  interaction.channel.send({embeds: [embed]}).then(msg => {
-        
-                    db.get(`SELECT * FROM setup`, (err, row) => {
-                      if (!row) {
-                        db.run(`INSERT INTO setup (id, channelId, actif) VALUES ('${msg.id}', '${interaction.channel.id}','${true}')`)
+                  await interaction.channel.send({embeds: [embed]}).then(async msg => {        
+                    const autoLb = await interaction.client.db.models.Setup.findOne({where: {actif: true}})
+
+                      if (!autoLb) {
+                        await interaction.client.db.models.Setup.create({actif: true, channelId: interaction.channel.id, id: msg.id})
                         } else {
-                          db.run(`UPDATE setup SET id='${msg.id}', actif='${true}', channelId='${interaction.channel.id}'`)
+                          await interaction.client.db.models.Setup.update({actif: true, channelId: interaction.channel.id, id: msg.id}, {where: {actif: false}})
                         }
         
-                        interaction.reply({content: "Le leaderboard est en cours d'installation, il va bientôt s'actualiser !", ephemeral: true})
-        
-        
-                      })
+                        await interaction.reply({content: "Le leaderboard est en cours d'installation, il va bientôt s'actualiser !", ephemeral: true})
         
                   })
             }

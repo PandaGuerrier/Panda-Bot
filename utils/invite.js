@@ -23,8 +23,8 @@ class Invite {
       })
     } else {
       await this.member.client.db.models.Inviter.update({
-        numero: inviterDB.numero + 1,
-        normal: inviterDB.normal + 1
+        numero: inviterDB.dataValues.numero + 1,
+        normal: inviterDB.dataValues.normal + 1
       }, { where: { id: this.inviter.id } })
     }
 
@@ -51,17 +51,18 @@ class Invite {
       return
     } else {
 
-      const inviterDB = await this.member.client.db.models.Inviter.findOne({ where: { id: inviteeDB.inviterId } })
-
+      const inviterDB = await this.member.client.db.models.Inviter.findOne({ where: { id: inviteeDB.dataValues.inviterId } })
+      console.log(inviteeDB)
+      console.log(inviterDB)
       if (!inviterDB) {
         return
       } else {
         await this.member.client.db.models.Inviter.update({
-          numero: inviterDB.numero - 1,
-          partie: inviterDB.partie + 1,
-        }, { where: { id: inviteeDB.inviterId } })
-        this.member.client.db.models.Users.destroy({ where: { id: this.member.id } })
+          numero: inviterDB.dataValues.numero - 1,
+          partie: inviterDB.dataValues.partie + 1,
+        }, { where: { id: inviteeDB.dataValues.inviterId } })
       }
+      
     }
   }
 
@@ -88,3 +89,5 @@ module.exports = Invite
 
 // join good
 // goodbye no
+
+//      this.member.client.db.models.Users.destroy({ where: { id: this.member.id } })

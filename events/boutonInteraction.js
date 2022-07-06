@@ -107,7 +107,7 @@ module.exports = {
             .setDescription("Vous avez bien été enregistré au giveaway !")
             .setColor(config.embedColor)
 
-          interaction.reply({ embeds: [embedPRIMARY], ephemeral: true })
+          await interaction.reply({ embeds: [embedPRIMARY], ephemeral: true })
 
           const buttons = new MessageActionRow()
             .addComponents(
@@ -131,7 +131,7 @@ module.exports = {
             .setDescription("Vous êtes déjà enregistré au giveaway !")
             .setColor(config.embedColor)
 
-          interaction.reply({ embeds: [embedAlready], ephemeral: true })
+            await interaction.reply({ embeds: [embedAlready], ephemeral: true })
         }
       }
     }

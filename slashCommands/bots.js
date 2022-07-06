@@ -10,17 +10,14 @@ module.exports = {
 
   async execute(interaction) {
 
-    db.all(`SELECT * FROM bots`, async (err, row) => {
-      if (err) throw err;
+    const manyBots = await interaction.client.db.models.Bots.findAll()
 
-      if (row.length <= 0) return interaction.reply({ content: "Aucun bot kick :O", ephemeral: true })
+    if (row.length <= 0) return interaction.reply({ content: "Aucun bot kick :O", ephemeral: true })
 
-      const embed = new MessageEmbed()
-        .setDescription(`${row.length} bots kick par le superbe anti bot !`)
-        .setColor(config.embedColor)
+    const embed = new MessageEmbed()
+      .setDescription(`${manyBots.length} bots kick par le superbe anti bot !`)
+      .setColor(config.embedColor)
 
-      interaction.reply({ embeds: [embed], ephemeral: true })
-
-    })
+    await interaction.reply({ embeds: [embed], ephemeral: true })
   }
 }

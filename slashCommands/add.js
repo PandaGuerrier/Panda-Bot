@@ -8,8 +8,7 @@ module.exports = {
         .addUserOption(option => option.setName('mention').setDescription('Le membre a ajouter').setRequired(true)),
 
     async execute(interaction) {
-        if (interaction.channel.name.startsWith("❓") || interaction.channel.name.startsWith("⛑️") || interaction.channel.name.startsWith("🤝") || interaction.channel.name.startsWith("🏁") || interaction.channel.name.startsWith("📂")) {
-
+        if(interaction.channel.topic === "ticket") {
             const membre = interaction.options.getUser("mention")
 
             const embed = new MessageEmbed()
@@ -22,8 +21,8 @@ module.exports = {
                 SEND_MESSAGES: true,
                 ATTACH_FILES: true,
                 READ_MESSAGE_HISTORY: true,
-            }).then(() => {
-                interaction.reply({ embeds: [embed] })
+            }).then(async () => {
+                await interaction.reply({ embeds: [embed] })
             })
 
 

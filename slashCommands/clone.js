@@ -9,8 +9,8 @@ module.exports = {
     async execute(interaction) {
 
         const chan = await interaction.channel.clone(undefined, true, false, 'clonage du channel')
-        interaction.channel.delete()
-        chan.setPosition(interaction.channel.position)
+        await interaction.channel.delete()
+        await chan.setPosition(interaction.channel.position)
 
         const embed = new MessageEmbed()
             .setTitle("CLONE")
@@ -18,10 +18,10 @@ module.exports = {
             .setColor(config.embedColor)
             .setImage("https://media.giphy.com/media/oe33xf3B50fsc/giphy.gif")
 
-        chan.send({ embeds: [embed] }).then((msg) => {
+        await chan.send({ embeds: [embed] }).then((msg) => {
 
-            setTimeout(() => {
-                msg.delete()
+            setTimeout(async () => {
+                await msg.delete()
             }, 6000)
         })
 

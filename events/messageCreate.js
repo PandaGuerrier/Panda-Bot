@@ -4,19 +4,10 @@ const config = require("../config/config.json")
 module.exports = {
   name: 'messageCreate',
   async execute(message) {
-
-    /*
-    *  *  *  *  *  *  *  *  *  *  *  *  *  *  
-    *  *  
-    *  *         Système Suggestion
-    *  *  
-    *  *  *  *  *  *  *  *  *  *  *  *  *  *  
-    */
-
     if (message.channel.id === config.channels.suggestion) {
       if (message.author.bot) return
 
-      message.delete()
+      await message.delete()
 
       const embed = new MessageEmbed()
         .setTitle('Nouvelle Suggestion')
@@ -26,7 +17,7 @@ module.exports = {
         )
         .setThumbnail(message.author.displayAvatarURL()).setColor(config.embedColor)
 
-      message.channel.send({ embeds: [embed] })
+      await message.channel.send({ embeds: [embed] })
         .then((s) => {
 
           s.react("✅")

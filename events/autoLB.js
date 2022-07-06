@@ -13,14 +13,12 @@ module.exports = {
 			const channel = client.channels.cache.get(isActif.dataValues.channelId)
 
 			if (!channel) return
-			console.log(isActif.dataValues.id)
 
 			channel.messages.fetch(isActif.dataValues.id).then(async (msg) => {
 
 				if (!msg) return
 
 				const inviteAll = await client.db.models.Inviter.findAll()
-				
 
 				const embedFail = new Discord.MessageEmbed()
 					.setDescription("Aucun classement pour le moment !")

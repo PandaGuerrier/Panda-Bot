@@ -92,16 +92,13 @@ module.exports = {
 
         if (!isGiveawayExist) return interaction.reply({ content: "Désolé, ce giveaway n'a jamais existé ou a été supprimé." })
 
-        const userGiveaway = isGiveawayExist.dataValues.users.find(u => u.id === interaction.member.id)
+        const userGiveaway = isGiveawayExist.dataValues.users.some(u => u == interaction.member.user.id)
 
         if (!userGiveaway) {
-          await interaction.client.db.Giveaway.update({
-            users: interaction.client.db.models.Giveaway.users.concat(interaction.member.id)
-          }, {
-            where: {
-              id: id
-            }
-          })
+          await interaction.client.db.models.Giveaway.update({
+            users: [...isGiveawayExist.dataValues.users, interaction.member.user.id]
+          }, 
+          {where: {id: id}})
 
           const embedPRIMARY = new MessageEmbed()
             .setDescription("Vous avez bien été enregistré au giveaway !")
@@ -112,19 +109,18 @@ module.exports = {
           const buttons = new MessageActionRow()
             .addComponents(
               new MessageButton()
-                .setCustomId(idVerif.text)
+                .setCustomId(interaction.customId)
                 .setLabel('Participer au giveaway')
                 .setStyle('PRIMARY'),
               new MessageButton()
                 .setCustomId("rien")
-                .setLabel('Participants: ' + isGiveawayExist.dataValues.users.length)
+                .setLabel('Participants: ' + parseInt(isGiveawayExist.dataValues.users.length) + 1)
                 .setStyle('SECONDARY')
                 .setDisabled(true),
             )
 
           const messageGiveaway = await interaction.channel.messages.fetch(interaction.message.id)
-          messageGiveaway.edit({ components: [buttons] })
-
+          await messageGiveaway.edit({ components: [buttons] })
         } else {
 
           const embedAlready = new MessageEmbed()

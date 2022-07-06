@@ -2,6 +2,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders')
 const config = require("../config/config.json")
 const { MessageEmbed } = require("discord.js")
 const ms = require("ms")
+const { tempsRestant } = require("../utils/functions.js")
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -35,7 +36,7 @@ module.exports = {
     const embedSenStaff = new MessageEmbed()
       .setDescription(`Vous avez bien mute : ${member}`)
       .addFields(
-        { name: "Sera unmute dans :", value: "<t:" + tempsRestant() + ":R>" },
+        { name: "Sera unmute dans :", value: "<t:" + tempsRestant(d, h, m) + ":R>" },
         { name: "Raison :", value: String(reason) }
       ).setColor(config.embedColor)
 
@@ -48,13 +49,5 @@ module.exports = {
     interaction.guild.channels.cache.get(config.channels.log).send({ embeds: [log] })
 
     member.timeout(ms(d + "d") + ms(h + "h") + ms(m + "m"), reason)
-
-    function tempsRestant() {
-      day = d * 86400
-      heure = h * 3600
-      minutes = m * 60
-
-      return Math.round(+new Date() / 1000) + day + heure + minutes
-    }
   }
 }

@@ -5,6 +5,15 @@ function removeEmojis(string) {
   return string.replace(regex, '')
 }
 
+function tempsRestant(d, h, m) {
+    let jours = d * 86400
+    let heures = h * 3600
+    let minutes = m * 60
+
+    return Math.round(+new Date() / 1000) + jours + heures + minutes
+}
+
 module.exports = {
-  removeEmojis
+  removeEmojis,
+  tempsRestant
 }

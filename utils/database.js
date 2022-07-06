@@ -5,7 +5,7 @@ function getDB() {
 
 function registerAllDB(client) {
 	const tables = [
-		{ name: 'GiveAway', columns: { id: { type: Sequelize.STRING, primaryKey: true, }, users: { type: Sequelize.TEXT }, winners: { type: Sequelize.INTEGER }, lot: { type: Sequelize.STRING }, channelId: { type: Sequelize.STRING }, messageId: { type: Sequelize.STRING }, } },
+		{ name: 'Giveaway', columns: { id: { type: Sequelize.STRING, primaryKey: true, }, users: { type: Sequelize.JSON }, gagnants: { type: Sequelize.INTEGER }, lot: { type: Sequelize.STRING }, channelId: { type: Sequelize.STRING }, messageId: { type: Sequelize.STRING }, } },
 		{ name: 'Bots', columns: { id: { type: Sequelize.STRING, primaryKey: true }, pseudo: { type: Sequelize.STRING } } },
 		{ name: 'Inviter', columns: { id: { type: Sequelize.STRING, primaryKey: true }, pseudo: { type: Sequelize.STRING }, numero: { type: Sequelize.INTEGER }, partie: { type: Sequelize.INTEGER }, normal: { type: Sequelize.INTEGER }, bonus: { type: Sequelize.INTEGER } } },
 		{ name: 'Users', columns: { id: { type: Sequelize.STRING, primaryKey: true }, code: { type: Sequelize.STRING }, inviterName: { type: Sequelize.STRING }, inviterId: { type: Sequelize.STRING } } },

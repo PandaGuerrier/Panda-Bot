@@ -76,10 +76,9 @@ module.exports = {
         await channel.send({
           content: `Tous les messages du ${interaction.channel.name}`,
           files: [attch]
-        }).then(() => {
-          interaction.channel.delete()
         })
-
+        
+        interaction.channel.delete()
       } else if (interaction.customId.startsWith("giveaway:")) {
 
         const id = interaction.customId.replace("giveaway:", "")
@@ -97,8 +96,8 @@ module.exports = {
         if (!userGiveaway) {
           await interaction.client.db.models.Giveaway.update({
             users: [...isGiveawayExist.dataValues.users, interaction.member.user.id]
-          }, 
-          {where: {id: id}})
+          },
+            { where: { id: id } })
 
           const embedPRIMARY = new MessageEmbed()
             .setDescription("Vous avez bien été enregistré au giveaway !")
@@ -127,7 +126,7 @@ module.exports = {
             .setDescription("Vous êtes déjà enregistré au giveaway !")
             .setColor(config.embedColor)
 
-            await interaction.reply({ embeds: [embedAlready], ephemeral: true })
+          await interaction.reply({ embeds: [embedAlready], ephemeral: true })
         }
       }
     }

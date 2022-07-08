@@ -18,12 +18,11 @@ module.exports = {
             .setColor(config.embedColor)
             .setImage("https://media.giphy.com/media/oe33xf3B50fsc/giphy.gif")
 
-        await chan.send({ embeds: [embed] }).then((msg) => {
+        const msg = await chan.send({ embeds: [embed] })
 
-            setTimeout(async () => {
-                await msg.delete()
-            }, 6000)
-        })
+        setTimeout(async () => {
+            await msg.delete()
+        }, 6000)
 
     }
 }

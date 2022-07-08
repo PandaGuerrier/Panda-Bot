@@ -36,7 +36,7 @@ module.exports = {
 
                 await interaction.message.guild.channels.cache.get(config.channels.log).send({ embeds: [log] })
 
-                interaction.channel.guild.channels.create(optionsConfig.emoji + '・' + interaction.member.user.username, {
+                const channel = await interaction.channel.guild.channels.create(optionsConfig.emoji + '・' + interaction.member.user.username, {
                     type: 'GUILD_TEXT',
                     parent: optionsConfig.categorieId,
                     permissionOverwrites: [
@@ -58,37 +58,36 @@ module.exports = {
                         })),
 
                     ]
-                }).then(async (channel) => {
-
-                    const openEmbed = new MessageEmbed()
-                        .setTitle("Ticket ouvert !")
-                        .setDescription("Channel : <#" + channel + ">")
-                        .setColor(config.embedColor)
-
-                    await interaction.reply({ embeds: [openEmbed], ephemeral: true })
-
-                    await channel.send(`${interaction.member.user}`).then((sent) => {
-                        setTimeout(() => {
-                            sent.delete()
-                        }, 500)
-                    })
-                    
-                    const row = new MessageActionRow()
-                        .addComponents(
-                            new MessageButton()
-                                .setCustomId('closed2')
-                                .setLabel('Fermer')
-                                .setEmoji("🗑️")
-                                .setStyle('DANGER'),
-                        )
-
-                    const closeEmbed = new MessageEmbed()
-                        .setDescription(optionsConfig.welcomeMessage)
-                        .addFields({ name: "Auteur du ticket :", value: interaction.member.user.username }).setColor(config.embedColor)
-
-                    await channel.send({ embeds: [closeEmbed], components: [row] })
-                    await channel.setTopic("ticket")
                 })
+
+                const openEmbed = new MessageEmbed()
+                    .setTitle("Ticket ouvert !")
+                    .setDescription("Channel : <#" + channel + ">")
+                    .setColor(config.embedColor)
+
+                await interaction.reply({ embeds: [openEmbed], ephemeral: true })
+
+                const sent = await channel.send(`${interaction.member.user}`)
+                
+                setTimeout(() => {
+                    sent.delete()
+                }, 500)
+
+                const row = new MessageActionRow()
+                    .addComponents(
+                        new MessageButton()
+                            .setCustomId('closed2')
+                            .setLabel('Fermer')
+                            .setEmoji("🗑️")
+                            .setStyle('DANGER'),
+                    )
+
+                const closeEmbed = new MessageEmbed()
+                    .setDescription(optionsConfig.welcomeMessage)
+                    .addFields({ name: "Auteur du ticket :", value: interaction.member.user.username }).setColor(config.embedColor)
+
+                await channel.send({ embeds: [closeEmbed], components: [row] })
+                await channel.setTopic("ticket")
             }
         }
     }

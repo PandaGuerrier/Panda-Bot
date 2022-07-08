@@ -17,13 +17,10 @@ module.exports = {
         )
         .setThumbnail(message.author.displayAvatarURL()).setColor(config.embedColor)
 
-      await message.channel.send({ embeds: [embed] })
-        .then((s) => {
-
-          s.react("✅")
-          s.react("❌")
-
-        })
+      const messageToReact = await message.channel.send({ embeds: [embed] })
+      
+      messageToReact.react("✅")
+      messageToReact.react("❌")
     }
   }
 }

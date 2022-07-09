@@ -12,7 +12,6 @@ module.exports = {
         const roleVerification = interaction.message.guild.roles.cache.get(config.roles.bienvenue);
 
         if (interaction.member.roles.cache.some(r => r.name.toLowerCase() === roleVerification.name.toLowerCase())) {
-
           return await interaction.deferUpdate();
         }
 
@@ -23,10 +22,10 @@ module.exports = {
         await interaction.member.roles.add(roleVerification) && await interaction.reply({ embeds: [verif], ephemeral: true })
 
       } else if (interaction.customId === "closed2") {
+
         const embed1 = new MessageEmbed()
           .setTitle("TICKET")
-          .setDescription("Êtes vous sûr de vouloir fermer le ticket ?")
-          .setColor(config.embedColor)
+          .setDescription("Êtes vous sûr de vouloir fermer le ticket ?").setColor(config.embedColor)
 
         const sur = new MessageActionRow()
           .addComponents(
@@ -45,16 +44,18 @@ module.exports = {
         await interaction.reply({ embeds: [embed1], components: [sur] })
 
       } else if (interaction.customId === "nan") {
-        interaction.message.delete()
+        await interaction.message.delete()
+
         const reste = new MessageEmbed()
           .setTitle("Le ticket reste ouvert !").setColor(config.embedColor)
 
         await interaction.reply({ embeds: [reste], ephemeral: true })
+        
       } else if (interaction.customId === "closed") {
+
         const log = new MessageEmbed()
           .setTitle('Ticket Ferm\u00e9')
-          .setColor('#FF0000')
-          .setDescription(`${interaction.member.user}` + " a ferm\u00e9 un ticket ! ( " + interaction.channel.name + " )")
+          .setDescription(`${interaction.member.user}` + " a ferm\u00e9 un ticket ! ( " + interaction.channel.name + " )").setColor('#FF0000')
 
         await interaction.message.guild.channels.cache.get(config.channels.log).send({ embeds: [log] })
 
@@ -73,12 +74,9 @@ module.exports = {
 
         let channel = interaction.message.guild.channels.cache.get(config.tickets.transcript)
 
-        await channel.send({
-          content: `Tous les messages du ${interaction.channel.name}`,
-          files: [attch]
-        })
-        
-        interaction.channel.delete()
+        await channel.send({content: `Tous les messages du ${interaction.channel.name}`, files: [attch]})
+
+        await interaction.channel.delete()
       } else if (interaction.customId.startsWith("giveaway:")) {
 
         const id = interaction.customId.replace("giveaway:", "")
@@ -100,8 +98,7 @@ module.exports = {
             { where: { id: id } })
 
           const embedPRIMARY = new MessageEmbed()
-            .setDescription("Vous avez bien été enregistré au giveaway !")
-            .setColor(config.embedColor)
+            .setDescription("Vous avez bien été enregistré au giveaway !").setColor(config.embedColor)
 
           await interaction.reply({ embeds: [embedPRIMARY], ephemeral: true })
 
@@ -123,8 +120,7 @@ module.exports = {
         } else {
 
           const embedAlready = new MessageEmbed()
-            .setDescription("Vous êtes déjà enregistré au giveaway !")
-            .setColor(config.embedColor)
+            .setDescription("Vous êtes déjà enregistré au giveaway !").setColor(config.embedColor)
 
           await interaction.reply({ embeds: [embedAlready], ephemeral: true })
         }

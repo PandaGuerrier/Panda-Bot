@@ -65,6 +65,7 @@ module.exports = {
         setTimeout(async () => {
 
             const giveaway = await interaction.client.db.models.Giveaway.findOne({ where: { id: id } })
+            
             if (giveaway.dataValues.users.length <= gagnants) {
                 const embedFinish = new MessageEmbed()
                     .setTitle(":tada: GIVEAWAY FINI :tada:")
@@ -93,6 +94,7 @@ module.exports = {
                 winners.push(winner[0])
                 giveaway.dataValues.users.splice(giveaway.dataValues.users.indexOf(winner[0]), 1)
             }
+
             const embedFinish = new MessageEmbed()
                 .setTitle(":tada: GIVEAWAY FINI :tada:")
                 .setDescription("Le Giveaway est fini !")

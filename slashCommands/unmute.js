@@ -16,8 +16,7 @@ module.exports = {
 
     const emb = new MessageEmbed()
       .setTitle("Vous avez \u00e9t\u00e9 unmute de " + config.informations.serverName + " !")
-      .setDescription("Veuillez à ne pas recommencer la prochaine fois ) !")
-      .setColor(config.embedColor)
+      .setDescription("Veuillez à ne pas recommencer la prochaine fois ) !").setColor(config.embedColor)
 
 
     const emb1 = new MessageEmbed()
@@ -29,8 +28,7 @@ module.exports = {
     await interaction.reply({ embeds: [emb1], ephemeral: true })
 
     const log = new MessageEmbed()
-      .setDescription(interaction.member.user.tag + " a unmute " + mem.user.tag)
-      .setColor("#FF0000")
+      .setDescription(interaction.member.user.tag + " a unmute " + mem.user.tag).setColor("#FF0000")
 
     await interaction.guild.channels.cache.get(config.channels.log).send({ embeds: [log] })
     await mem.timeout(null, "unmuted")

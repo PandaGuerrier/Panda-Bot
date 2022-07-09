@@ -15,8 +15,7 @@ module.exports = {
         const embed = new MessageEmbed()
             .setTitle("CLONE")
             .setDescription("J'ai bien clon\u00e9 le channel : " + chan.name + " !")
-            .setColor(config.embedColor)
-            .setImage("https://media.giphy.com/media/oe33xf3B50fsc/giphy.gif")
+            .setImage("https://media.giphy.com/media/oe33xf3B50fsc/giphy.gif").setColor(config.embedColor)
 
         const msg = await chan.send({ embeds: [embed] })
 

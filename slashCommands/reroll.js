@@ -60,8 +60,7 @@ module.exports = {
             .addFields(
                 { name: "Lot :", value: giveaway.dataValues.lot, inline: true },
                 { name: "Gagnant(s)", value: `${winners.map(e => `<@${e}>`).join(", ")}`, inline: true }
-            )
-            .setColor(config.embedColor)
+            ).setColor(config.embedColor)
             .setThumbnail(interaction.guild.iconURL())
 
         const buttons = new MessageActionRow()

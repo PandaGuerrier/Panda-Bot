@@ -11,8 +11,8 @@ module.exports = {
         if (interaction.channel.topic === "ticket") {
             const embed1 = new MessageEmbed()
                 .setTitle("TICKET")
-                .setDescription("Êtes vous sûr de vouloir fermer le ticket ?")
-                .setColor(config.embedColor)
+                .setDescription("Êtes vous sûr de vouloir fermer le ticket ?").setColor(config.embedColor)
+                
             const sur = new MessageActionRow()
                 .addComponents(
                     new MessageButton()

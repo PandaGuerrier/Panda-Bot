@@ -44,10 +44,9 @@ module.exports = {
       })
 
       const embedRien = new MessageEmbed()
-        .setDescription(`${membre} (${membre.username}) a maintenant ${actuelle} invitations (${normale} normales, ${partie} parties, ${bonus} bonus)`)
-        .setColor(config.embedColor)
+        .setDescription(`${membre} (${membre.username}) a maintenant ${actuelle} invitations (${normale} normales, ${partie} parties, ${bonus} bonus)`).setColor(config.embedColor)
 
-      interaction.reply({ embeds: [embedRien], ephemeral: true })
+      await interaction.reply({ embeds: [embedRien], ephemeral: true })
 
     } else {
 
@@ -64,10 +63,9 @@ module.exports = {
         })
 
         const embedEdit = new MessageEmbed()
-          .setDescription(`${membre} (${membre.username}) a maintenant ${actuelle + invite.dataValues.numero} invitation(s) (${normale + invite.dataValues.normal} normale(s), ${partie + invite.dataValues.partie} partie(s), ${bonus + invite.dataValues.bonus} bonu(s))`)
-          .setColor(config.embedColor)
+          .setDescription(`${membre} (${membre.username}) a maintenant ${actuelle + invite.dataValues.numero} invitation(s) (${normale + invite.dataValues.normal} normale(s), ${partie + invite.dataValues.partie} partie(s), ${bonus + invite.dataValues.bonus} bonu(s))`).setColor(config.embedColor)
 
-        interaction.reply({ embeds: [embedEdit], ephemeral: true })
+        await interaction.reply({ embeds: [embedEdit], ephemeral: true })
 
       } else if (esChoix == 'set') {
 
@@ -83,10 +81,9 @@ module.exports = {
         })
 
         const embedSet = new MessageEmbed()
-          .setDescription(`${membre} (${membre.username}) a maintenant ${actuelle} invitation(s) (${normale} normale(s), ${partie} partie(s), ${bonus} bonu(s))`)
-          .setColor(config.embedColor)
+          .setDescription(`${membre} (${membre.username}) a maintenant ${actuelle} invitation(s) (${normale} normale(s), ${partie} partie(s), ${bonus} bonu(s))`).setColor(config.embedColor)
 
-        interaction.reply({ embeds: [embedSet], ephemeral: true })
+        await interaction.reply({ embeds: [embedSet], ephemeral: true })
       }
     }
   },

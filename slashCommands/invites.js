@@ -26,14 +26,14 @@ module.exports = {
             .setDescription(`${membre.id === interaction.member.user.id ? "Vous n'avez" : `${membre} n'à`} aucune invitation enregistrée !`)
             .setColor(config.embedColor)
 
-        if (!invite) return interaction.reply({ embeds: [noInviteEmbed], ephemeral: true })
+        if (!invite) return await interaction.reply({ embeds: [noInviteEmbed], ephemeral: true })
 
         else {
             const yesInviteEmbed = new MessageEmbed()
                 .setDescription(`${membre.id === interaction.member.user.id ? "Vous avez" : `${membre} à`} ${invite.dataValues.numero} invitation(s) (${invite.dataValues.normal} normale(s), ${invite.dataValues.partie} partie(s), ${invite.dataValues.bonus} bonus)`)
                 .setColor(config.embedColor)
 
-            interaction.reply({ embeds: [yesInviteEmbed], ephemeral: true })
+            await interaction.reply({ embeds: [yesInviteEmbed], ephemeral: true })
         }
     },
 }

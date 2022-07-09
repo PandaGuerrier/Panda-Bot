@@ -23,16 +23,14 @@ module.exports = {
 
                 const em = new MessageEmbed()
                     .setTitle("Erreur")
-                    .setDescription("Vous avez d\u00e9j\u00e0 un ticket ouvert !")
-                    .setColor(config.embedColor)
+                    .setDescription("Vous avez d\u00e9j\u00e0 un ticket ouvert !").setColor(config.embedColor)
 
                 if (interaction.channel.guild.channels.cache.find(c => c.name == `${optionsConfig.emoji}・${interaction.member.user.username}`.split(' ').join('-').toLocaleLowerCase())) return await interaction.reply({ embeds: [em], ephemeral: true })
 
 
                 const log = new MessageEmbed()
                     .setTitle('Nouveau Ticket')
-                    .setColor('#2BFA02')
-                    .setDescription(interaction.member.user.tag + " \u00e0 ouvert un ticket !")
+                    .setDescription(interaction.member.user.tag + " \u00e0 ouvert un ticket !").setColor('#2BFA02')
 
                 await interaction.message.guild.channels.cache.get(config.channels.log).send({ embeds: [log] })
 
@@ -62,8 +60,7 @@ module.exports = {
 
                 const openEmbed = new MessageEmbed()
                     .setTitle("Ticket ouvert !")
-                    .setDescription("Channel : <#" + channel + ">")
-                    .setColor(config.embedColor)
+                    .setDescription("Channel : <#" + channel + ">").setColor(config.embedColor)
 
                 await interaction.reply({ embeds: [openEmbed], ephemeral: true })
 

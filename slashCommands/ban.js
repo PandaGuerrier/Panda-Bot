@@ -20,8 +20,7 @@ module.exports = {
       .addFields(
         { name: "Banni par : ", value: interaction.member.user.username, inline: true },
         { name: "Raison :", value: String(EmbedDescription).substr(0, 2048).split("+n+").join("\n"), inline: true }
-      )
-      .setColor("#FF0000")
+      ).setColor("#FF0000")
 
 
     const emb1 = new MessageEmbed()
@@ -29,8 +28,7 @@ module.exports = {
       .setDescription("Vous avez bien banni : " + mem.tag)
       .addFields(
         { name: "Raison :", value: String(EmbedDescription).substr(0, 2048).split("+n+").join("\n") }
-      )
-      .setColor(config.embedColor)
+      ).setColor(config.embedColor)
 
     await mem.send({ embeds: [emb] }).catch((e) => {
 
@@ -38,8 +36,7 @@ module.exports = {
     await interaction.reply({ embeds: [emb1], ephemeral: true })
 
     const log = new MessageEmbed()
-      .setDescription(interaction.member.user.tag + " a banni " + mem.tag + " pour la raison : " + String(EmbedDescription))
-      .setColor("#FF0000")
+      .setDescription(interaction.member.user.tag + " a banni " + mem.tag + " pour la raison : " + String(EmbedDescription)).setColor("#FF0000")
 
     await interaction.guild.channels.cache.get(config.channels.log).send({ embeds: [log] })
     await interaction.guild.members.ban(mem.id, { reason: EmbedDescription }).catch((error) => { })

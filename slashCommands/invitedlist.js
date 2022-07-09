@@ -20,18 +20,14 @@ module.exports = {
       }
     })
 
-    if (invite.length <= 0) return interaction.reply({
-      content: "Vous n'avez invité personne pour le moment !",
-      ephemeral: true
-    })
+    if (invite.length <= 0) return await interaction.reply({content: "Vous n'avez invité personne pour le moment !", ephemeral: true})
 
     const embed = new MessageEmbed()
       .setTitle(`${membre.id === interaction.member.user.id ? "Vous avez" : `${membre} a`} invité :`)
       .setDescription((invite.map((e, i) => {
         return `${i + 1}. **<@${e.dataValues.id}>**`
-      })).slice(0, 200).join('\n') + `\n\n${invite.length > 200 ? `Et ${invite.length - 200} autres personnes !` : ``}`)
-      .setColor(config.embedColor)
+      })).slice(0, 200).join('\n') + `\n\n${invite.length > 200 ? `Et ${invite.length - 200} autres personnes !` : ``}`).setColor(config.embedColor)
 
-    interaction.reply({ embeds: [embed], ephemeral: true })
+    await interaction.reply({ embeds: [embed], ephemeral: true })
   },
 }

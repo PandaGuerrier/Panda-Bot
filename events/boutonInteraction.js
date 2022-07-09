@@ -87,7 +87,7 @@ module.exports = {
           }
         })
 
-        if (!isGiveawayExist) return interaction.reply({ content: "Désolé, ce giveaway n'a jamais existé ou a été supprimé." })
+        if (!isGiveawayExist) return await interaction.reply({ content: "Désolé, ce giveaway n'a jamais existé ou a été supprimé." })
 
         const userGiveaway = isGiveawayExist.dataValues.users.some(u => u == interaction.member.user.id)
 

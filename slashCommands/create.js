@@ -46,8 +46,7 @@ module.exports = {
                 { name: "Lot:", value: lot, inline: true },
                 { name: "Temps restant:", value: `<t:${tempsRestant(days, hours, minutes)}:R>`, inline: true },
                 { name: "Id du giveaway:", value: id, inline: true },
-            )
-            .setColor(config.embedColor)
+            ).setColor(config.embedColor)
             .setThumbnail(interaction.guild.iconURL())
 
         const messageSend = await channel.send({ embeds: [embed], components: [buttons] })
@@ -73,8 +72,7 @@ module.exports = {
                     .addFields(
                         { name: "Lot :", value: lot, inline: true },
                         { name: "Gagnant(s)", value: `Pas assez de participants :(`, inline: true }
-                    )
-                    .setColor(config.embedColor)
+                    ).setColor(config.embedColor)
                     .setThumbnail(interaction.guild.iconURL())
 
                 const buttons = new MessageActionRow()
@@ -101,8 +99,7 @@ module.exports = {
                 .addFields(
                     { name: "Lot :", value: lot, inline: true },
                     { name: "Gagnant(s)", value: `${giveaway.dataValues.users.map(e => `<@${e}>`).join(", ")}`, inline: true }
-                )
-                .setColor(config.embedColor)
+                ).setColor(config.embedColor)
                 .setThumbnail(interaction.guild.iconURL())
 
             const buttons = new MessageActionRow()

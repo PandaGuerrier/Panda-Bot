@@ -14,14 +14,10 @@ module.exports = {
         if (nm < 0) return await interaction.reply({ content: "Veuillez entrer un nombre sup\u00e9rieur à 0 !", ephemeral: true })
         const emb = new MessageEmbed()
             .setTitle("Succ\u00e8s !")
-            .setDescription("J'ai bien supprim\u00e9 " + nm + " messages !")
-            .setColor(config.embedColor)
+            .setDescription("J'ai bien supprim\u00e9 " + nm + " messages !").setColor(config.embedColor)
 
-        await interaction.channel.bulkDelete(nm).catch((e) => {
-
-        })
-            .catch((e) => {
-                interaction.reply({ content: "D\u00e9sol\u00e9, il y a une erreur. \nCela est peut \u00eatre possible si vous essayez de supprimer des messages de + 14 jours !", ephemeral: true })
+        await interaction.channel.bulkDelete(nm).catch(async () => {
+               await interaction.reply({ content: "D\u00e9sol\u00e9, il y a une erreur. \nCela est peut \u00eatre possible si vous essayez de supprimer des messages de + 14 jours !", ephemeral: true })
             })
         await interaction.reply({ embeds: [emb], ephemeral: true })
     },

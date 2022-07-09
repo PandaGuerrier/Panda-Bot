@@ -17,14 +17,14 @@ module.exports = {
             }
         })
 
-        if (!giveaway) return interaction.reply({ content: "L'id de ce giveaway n'existe pas !", ephemeral: true })
+        if (!giveaway) return await interaction.reply({ content: "L'id de ce giveaway n'existe pas !", ephemeral: true })
         else {
             interaction.client.db.models.Giveaway.destroy({
                 where: {
                     id: id
                 }
             })
-            interaction.reply({ content: "Le giveaway a bien été supprimé !", ephemeral: true })
+            await interaction.reply({ content: "Le giveaway a bien été supprimé !", ephemeral: true })
         }
     },
 }

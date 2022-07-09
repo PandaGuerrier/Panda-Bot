@@ -36,7 +36,7 @@ module.exports = {
     await mem.send({ embeds: [emb] }).catch((e) => {
 
     })
-    interaction.reply({ embeds: [emb1], ephemeral: true })
+    await interaction.reply({ embeds: [emb1], ephemeral: true })
 
     const log = new MessageEmbed()
       .setDescription(interaction.member.user.tag + " a kick " + mem.tag + " pour la raison : " + String(EmbedDescription))

@@ -54,8 +54,7 @@ module.exports = {
         );
 
       const emb = new MessageEmbed()
-        .setDescription(`Pour éviter toutes attaques de bots, nous avons mis en place un système **ANTI-BOT**.\n\nLa seule chose que vous avez à faire c'est de cliquer sur le bouton ci dessous.\n\n**Bon jeux sur Tenshi.**`)
-        .setColor(config.embedColor)
+        .setDescription(`Pour éviter toutes attaques de bots, nous avons mis en place un système **ANTI-BOT**.\n\nLa seule chose que vous avez à faire c'est de cliquer sur le bouton ci dessous.\n\n**Bon jeux sur Tenshi.**`).setColor(config.embedColor)
 
         await interaction.channel.send({ embeds: [emb], components: [row] })
         await interaction.reply({ content: "C'est bon bg !", ephemeral: true })

@@ -30,8 +30,7 @@ module.exports = {
     } else {
 
       const embed = new MessageEmbed()
-        .setTitle("INSTALLATION...")
-        .setColor(config.embedColor)
+        .setTitle("INSTALLATION...").setColor(config.embedColor)
 
       const msg = await interaction.channel.send({ embeds: [embed] })
       const autoLb = await interaction.client.db.models.Setup.findOne({ where: { actif: true } })

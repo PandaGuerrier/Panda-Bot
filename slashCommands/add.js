@@ -13,8 +13,7 @@ module.exports = {
 
             const embed = new MessageEmbed()
                 .setTitle("Succ\u00e8s")
-                .setDescription(`J'ai bien ajout\u00e9 ${membre} au ticket !`)
-                .setColor(config.embedColor)
+                .setDescription(`J'ai bien ajout\u00e9 ${membre} au ticket !`).setColor(config.embedColor)
 
             await interaction.channel.permissionOverwrites.edit(membre.id, {
                 VIEW_CHANNEL: true,

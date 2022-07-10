@@ -11,6 +11,6 @@ module.exports = {
       .setColor(config.embedColor)
       .setThumbnail(track.thumbnail)
 
-      queue.metadata.channel.send({embeds: [embedMusique]});
+      await queue.metadata.channel.send({embeds: [embedMusique]});
   }
 }

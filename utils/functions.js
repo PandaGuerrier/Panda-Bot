@@ -10,7 +10,7 @@ function tempsRestant(d, h, m) {
     let heures = h * 3600
     let minutes = m * 60
 
-    return Math.round(+new Date() / 1000) + jours + heures + minutes
+    return Math.round(+new Date() / 1000) + ms(jours + "d") + ms(heures + "d") + ms(minutes + "d")
 }
 
 module.exports = {

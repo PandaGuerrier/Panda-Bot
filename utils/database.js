@@ -1,7 +1,4 @@
 const { Sequelize } = require('sequelize');
-function getDB() {
-	return console.log("bite")
-}
 
 function registerAllDB(client) {
 	const tables = [
@@ -19,6 +16,5 @@ function registerAllDB(client) {
 }
 
 module.exports = {
-	getDB,
 	registerAllDB
 }

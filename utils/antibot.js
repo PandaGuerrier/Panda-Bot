@@ -1,25 +1,38 @@
-const db = require("./database").getDB()
+const { removeEmojis } = require('./functions')
 
 class AntiBot {
-    constructor(bot) {
-        this.bot = bot
+  constructor(bot, client) {
+    this.bot = bot
+  }
+
+  add() {
+    const userBotDatabase = this.bot.client.db.models.Bots.findOne({
+      where: {
+        id: this.bot.user.id
+      }
+    })
+
+    if (!userBotDatabase) {
+      this.bot.client.db.models.Bots.create({
+        id: this.bot.user.id,
+        pseudo: removeEmojis(this.bot.user.tag)
+      })
+
+      this.bot.kick({ reason: "BOT" })
+
+    } else {
+
+      this.bot.client.db.models.Bots.update({
+        pseudo: removeEmojis(this.bot.user.tag)
+      }, {
+        where: {
+          id: this.bot.user.id
+        }
+      })
+
+      this.bot.kick({ reason: "BOT" })
     }
-
-    add() {
-        db.get(`SELECT * FROM bots WHERE id = ${this.bot.id}`, (err, row) => {
-            if (!row) {
-              db.run(`INSERT INTO bots (pseudo, id) VALUES ('${removeEmojis(this.bot.user.tag)}', '${this.bot.id}')`)
-
-              this.bot.kick({ reason: "BOT" })
-
-            } else {
-
-              db.run(`UPDATE bots SET pseudo='${removeEmojis(this.bot.user.tag)}' WHERE id='${this.bot.id}'`)
-              this.bot.kick({ reason: "BOT" })
-
-            }
-          })
-    }
+  }
 }
 
 module.exports = AntiBot

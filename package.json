@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "@discordjs/opus": "^0.8.0",
+    "discord-player": "^5.2.2",
+    "discord.js": "^13.8.1",
+    "dotenv": "^16.0.1",
+    "sequelize": "^6.21.2",
+    "sqlite3": "^5.0.8"
+  }
+}

@@ -65,7 +65,7 @@ module.exports = {
         setTimeout(async () => {
 
             const giveaway = await interaction.client.db.models.Giveaway.findOne({ where: { id: id } })
-            
+
             if (giveaway.dataValues.users.length <= gagnants) {
                 const embedFinish = new MessageEmbed()
                     .setTitle(":tada: GIVEAWAY FINI :tada:")
@@ -87,13 +87,8 @@ module.exports = {
 
                 return await messageSend.edit({ embeds: [embedFinish], components: [buttons] }) && channel.send({ content: "Pas assez de participants pour le tirage au sort !" })
             }
-            const winners = []
 
-            for (let i = 0; i < giveaway.dataValues.gagnants; i++) {
-                const winner = giveaway.dataValues.users.sort(() => 0.5 - Math.random()).slice(0, 1);
-                winners.push(winner[0])
-                giveaway.dataValues.users.splice(giveaway.dataValues.users.indexOf(winner[0]), 1)
-            }
+            const winners = giveaway.dataValues.users.sort(() => 0.5 - Math.random()).slice(0, giveaway.dataValues.gagnants);
 
             const embedFinish = new MessageEmbed()
                 .setTitle(":tada: GIVEAWAY FINI :tada:")

@@ -18,7 +18,7 @@ class PandaClient {
             define: {
                 freezeTableName: true
             },
-            //logging: false
+            logging: false
         });
 
         registerAllDB(client)

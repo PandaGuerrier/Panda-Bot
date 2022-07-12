@@ -51,8 +51,7 @@ class Invite {
     } else {
 
       const inviterDB = await this.member.client.db.models.Inviter.findOne({ where: { id: invitedDB.dataValues.inviterId } })
-      console.log(invitedDB)
-      console.log(inviterDB)
+
       if (!inviterDB) {
         return
       } else {
@@ -77,6 +76,3 @@ class Invite {
 }
 
 module.exports = Invite
-
-// https://discord.gg/AXY3bydk
-

@@ -59,14 +59,19 @@ module.exports = {
 
         await interaction.message.guild.channels.cache.get(config.channels.log).send({ embeds: [log] })
 
-        const sum_messages = [];
-        let last_id = null;
+				const sum_messages = [];
+				let last_id = null;
+				let size100 = false
 
-        do {
-          const messages = await interaction.channel.messages.fetch({ limit: 100, before: last_id });
-          sum_messages.push(...Array.from(messages.values()));
-          last_id = messages.last()?.id;
-        } while(messages.size != 100);
+				do {
+					const messages = await interaction.channel.messages.fetch({ limit: 100, before: last_id });
+
+					sum_messages.push(...Array.from(messages.values()));
+					last_id = messages.last()?.id;
+
+					if(messages.size != 100) size100 = false
+
+				} while (size100);
 
         let attch = new MessageAttachment(Buffer.from(`Tous les messages du ticket ${interaction.channel.name}\n\n` + sum_messages.map(m => `${new Date(m.createdAt).toLocaleString('fr-FR')} | ${m.author.tag} -> ${m.attachments.size > 0 ? m.attachments.first().proxyURL : m.content}`).reverse().join('\n') + "\n\n----------------------------------------------"), `transcript_${interaction.channel.name}.txt`)
 

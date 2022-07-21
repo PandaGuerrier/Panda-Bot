@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
 const { MessageEmbed } = require('discord.js')
 const config = require('../config/config.json')
+const playdl = require("play-dl");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -18,6 +19,14 @@ module.exports = {
     const queue = interaction.client.player.createQueue(interaction.guild, {
       metadata: {
         channel: interaction.channel
+      },
+      async onBeforeCreateStream(track, source, _queue) {
+        // only trap youtube source
+        if (source === "youtube") {
+            // track here would be youtube track
+            return (await playdl.stream(track.url, { discordPlayerCompatibility : true })).stream;
+            // we must return readable stream or void (returning void means telling discord-player to look for default extractor)
+        }
       }
     });
     try {

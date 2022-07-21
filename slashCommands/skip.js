@@ -15,7 +15,7 @@ module.exports = {
     const queue = interaction.client.player.getQueue(interaction.guild)
     if (!queue) return await interaction.reply({ content: "Il n'y a pas de musique en cours !", ephemeral: true });
 
-    if(!queue.tracks[0 + 1]) return interaction.reply({ content: "Il n'y a pas de musique à skip !", ephemeral: true });
+    if(!queue.tracks[0]) return interaction.reply({ content: "Il n'y a pas de musique à skip !", ephemeral: true });
     
     queue.skip();
     const embedSkip = new MessageEmbed()

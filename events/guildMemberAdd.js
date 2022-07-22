@@ -35,10 +35,13 @@ module.exports = {
     member.client.invites.set(member.guild.id, cachedInvites)
 
     setTimeout(async () => {
+      if (!member) return
       const roleVerification = member.guild.roles.cache.get(config.roles.bienvenue);
       if (!member.roles.cache.some(r => r.name.toLowerCase() === roleVerification.name.toLowerCase())) {
         if (!member) return
-        new AntiBot.add(member)
+
+        new AntiBot(member).add()
+        console.log("[ANTIBOT] " + member.user.tag + " a été ajouté à la liste des bots")    
       }
     }, 180000);
   }

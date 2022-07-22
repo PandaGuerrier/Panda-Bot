@@ -4,6 +4,8 @@
     "discord-player": "^5.2.2",
     "discord.js": "^13.8.1",
     "dotenv": "^16.0.1",
+    "lyrics-finder": "^21.7.0",
+    "play-dl": "^1.9.5",
     "sequelize": "^6.21.2",
     "sqlite3": "^5.0.8"
   }

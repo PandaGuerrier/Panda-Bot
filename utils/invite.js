@@ -1,4 +1,5 @@
 const { removeEmojis } = require("../utils/functions.js")
+const config = require("../config/config.json")
 
 class Invite {
   constructor(member, inviter, code) {

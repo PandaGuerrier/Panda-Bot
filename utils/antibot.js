@@ -1,11 +1,12 @@
 const { removeEmojis } = require('./functions')
 
 class AntiBot {
-  constructor(bot, client) {
+  constructor(bot) {
     this.bot = bot
   }
 
   add() {
+    console.log(this.bot)
     const userBotDatabase = this.bot.client.db.models.Bots.findOne({
       where: {
         id: this.bot.user.id

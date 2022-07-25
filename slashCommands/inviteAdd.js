@@ -28,14 +28,14 @@ module.exports = {
     const partie = interaction.options.getInteger("partie")
     const bonus = interaction.options.getInteger("bonus")
 
-    const invite = await interaction.client.db.models.Invite.findOne({
+    const invite = await interaction.client.db.models.Inviter.findOne({
       where: {
         id: membre.id
       }
     })
 
     if (!invite) {
-      await interaction.client.db.models.Invite.create({
+      await interaction.client.db.models.Inviter.create({
         id: membre.id,
         actuelle: actuelle,
         normale: normale,
@@ -51,7 +51,7 @@ module.exports = {
     } else {
 
       if (esChoix == 'edit') {
-        await interaction.client.db.models.Invite.update({
+        await interaction.client.db.models.Inviter.update({
           actuelle: actuelle + invite.dataValues.actuelle,
           normale: normale + invite.dataValues.normale,
           partie: partie + invite.dataValues.partie,
@@ -69,7 +69,7 @@ module.exports = {
 
       } else if (esChoix == 'set') {
 
-        await interaction.client.db.models.Invite.update({
+        await interaction.client.db.models.Inviter.update({
           actuelle: actuelle,
           normale: normale,
           partie: partie,

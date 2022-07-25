@@ -16,7 +16,7 @@ module.exports = {
 
         if (!membre) membre = interaction.member.user
 
-        const invite = await interaction.client.db.models.Invite.findOne({
+        const invite = await interaction.client.db.models.Inviter.findOne({
             where: {
                 id: membre.id
             }

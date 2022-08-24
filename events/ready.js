@@ -18,5 +18,8 @@ module.exports = {
     client.user.setActivity(`${config.informations.status}`, {
       type: "PLAYING",
     })
+    setInterval(() => {
+      await guild.channels.cache.get(config.channels.stats).setName(`📝・${member.guild.memberCount} membres`)
+    }, 15000);
   }
 }

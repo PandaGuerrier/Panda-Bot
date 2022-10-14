@@ -86,7 +86,6 @@ module.exports = {
 
     collector.on('collect', async (i) => {
 
-
       if (i.customId.includes("precedent:")) {
 
         const boutonSansString = parseInt(i.customId.replace("precedent:", ""))

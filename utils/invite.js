@@ -7,6 +7,7 @@ class Invite {
     this.inviter = inviter
     this.code = code
   }
+  
   async welcome() {
     const inviterDB = await this.member.client.db.models.Inviter.findOne({ where: { id: this.inviter.id } })
 
